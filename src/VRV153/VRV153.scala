@@ -77,8 +77,8 @@ object VRV153Config
           samplingSize      = 5,
           postSamplingSize  = 2
         ),
-        txFifoDepth = 16,
-        rxFifoDepth = 16
+        txFifoDepth = 1024,
+        rxFifoDepth = 1024
       ),
       uart2CtrlConfig = UartCtrlMemoryMappedConfig(
         uartCtrlConfig = UartCtrlGenerics(
@@ -88,8 +88,8 @@ object VRV153Config
           samplingSize      = 5,
           postSamplingSize  = 2
         ),
-        txFifoDepth = 16,
-        rxFifoDepth = 16
+        txFifoDepth = 1024,
+        rxFifoDepth = 1024
       ),
       spim1CtrlConfig = SpiMasterCtrlMemoryMappedConfig(
         ctrlGenerics = SpiMasterCtrlGenerics(
@@ -97,8 +97,8 @@ object VRV153Config
           timerWidth        = 16,
           dataWidth         = 8
         ),
-        cmdFifoDepth = 256,
-        rspFifoDepth = 256
+        cmdFifoDepth = 1024,
+        rspFifoDepth = 1024
       ),
       spim2CtrlConfig = SpiMasterCtrlMemoryMappedConfig(
         ctrlGenerics = SpiMasterCtrlGenerics(
@@ -106,8 +106,8 @@ object VRV153Config
           timerWidth        = 16,
           dataWidth         = 8
         ),
-        cmdFifoDepth = 256,
-        rspFifoDepth = 256
+        cmdFifoDepth = 1024,
+        rspFifoDepth = 1024
       ),
       cpuPlugins = ArrayBuffer(
         //new PcManagerSimplePlugin(0x80000000l, false),

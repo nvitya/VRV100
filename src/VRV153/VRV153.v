@@ -608,9 +608,9 @@ module VRV153 (
   wire       [2:0]    _zz_dbus_axi_arw_payload_len;
   reg                 resetCtrl_systemResetUnbuffered;
   reg        [5:0]    resetCtrl_systemResetCounter = 6'h0;
-  wire       [5:0]    _zz_when_VRV153_l291;
-  wire                when_VRV153_l291;
-  wire                when_VRV153_l295;
+  wire       [5:0]    _zz_when_VRV153_l294;
+  wire                when_VRV153_l294;
+  wire                when_VRV153_l298;
   reg                 resetCtrl_systemReset;
   reg                 resetCtrl_axiReset;
   wire                resetCtrl_vgaReset;
@@ -1851,14 +1851,14 @@ module VRV153 (
   );
   always @(*) begin
     resetCtrl_systemResetUnbuffered = 1'b0;
-    if(when_VRV153_l291) begin
+    if(when_VRV153_l294) begin
       resetCtrl_systemResetUnbuffered = 1'b1;
     end
   end
 
-  assign _zz_when_VRV153_l291[5 : 0] = 6'h3f;
-  assign when_VRV153_l291 = (resetCtrl_systemResetCounter != _zz_when_VRV153_l291);
-  assign when_VRV153_l295 = io_asyncReset_buffercc_io_dataOut;
+  assign _zz_when_VRV153_l294[5 : 0] = 6'h3f;
+  assign when_VRV153_l294 = (resetCtrl_systemResetCounter != _zz_when_VRV153_l294);
+  assign when_VRV153_l298 = io_asyncReset_buffercc_io_dataOut;
   assign resetCtrl_vgaReset = resetCtrl_axiReset_buffercc_io_dataOut;
   assign axi_core_cpu_iBus_rsp_payload_error = (! (axi4ReadOnlyDecoder_2_io_input_r_payload_resp == 2'b00));
   always @(*) begin
@@ -2242,10 +2242,10 @@ module VRV153 (
   assign io_apb2_PWRITE = axi_apbBridge2_io_apb_PWRITE;
   assign io_apb2_PWDATA = axi_apbBridge2_io_apb_PWDATA;
   always @(posedge io_axiClk) begin
-    if(when_VRV153_l291) begin
+    if(when_VRV153_l294) begin
       resetCtrl_systemResetCounter <= (resetCtrl_systemResetCounter + 6'h01);
     end
-    if(when_VRV153_l295) begin
+    if(when_VRV153_l298) begin
       resetCtrl_systemResetCounter <= 6'h0;
     end
   end
@@ -10094,13 +10094,13 @@ module Apb3SpiMasterCtrl (
   wire                bridge_cmdLogic_streamUnbuffered_queueWithAvailability_io_pop_valid;
   wire       `SpiMasterCtrlCmdMode_binary_sequential_type bridge_cmdLogic_streamUnbuffered_queueWithAvailability_io_pop_payload_mode;
   wire       [8:0]    bridge_cmdLogic_streamUnbuffered_queueWithAvailability_io_pop_payload_args;
-  wire       [8:0]    bridge_cmdLogic_streamUnbuffered_queueWithAvailability_io_occupancy;
-  wire       [8:0]    bridge_cmdLogic_streamUnbuffered_queueWithAvailability_io_availability;
+  wire       [10:0]   bridge_cmdLogic_streamUnbuffered_queueWithAvailability_io_occupancy;
+  wire       [10:0]   bridge_cmdLogic_streamUnbuffered_queueWithAvailability_io_availability;
   wire                spiCtrl_io_rsp_queueWithOccupancy_io_push_ready;
   wire                spiCtrl_io_rsp_queueWithOccupancy_io_pop_valid;
   wire       [7:0]    spiCtrl_io_rsp_queueWithOccupancy_io_pop_payload;
-  wire       [8:0]    spiCtrl_io_rsp_queueWithOccupancy_io_occupancy;
-  wire       [8:0]    spiCtrl_io_rsp_queueWithOccupancy_io_availability;
+  wire       [10:0]   spiCtrl_io_rsp_queueWithOccupancy_io_occupancy;
+  wire       [10:0]   spiCtrl_io_rsp_queueWithOccupancy_io_availability;
   wire       [2:0]    _zz_bridge_cmdLogic_streamUnbuffered_payload_args;
   wire                busCtrl_askWrite;
   wire                busCtrl_askRead;
@@ -10170,7 +10170,7 @@ module Apb3SpiMasterCtrl (
     .io_axiClk               (io_axiClk                                                                   ), //i
     .resetCtrl_axiReset      (resetCtrl_axiReset                                                          )  //i
   );
-  StreamFifo_5 spiCtrl_io_rsp_queueWithOccupancy (
+  StreamFifo spiCtrl_io_rsp_queueWithOccupancy (
     .io_push_valid         (spiCtrl_io_rsp_valid                               ), //i
     .io_push_ready         (spiCtrl_io_rsp_queueWithOccupancy_io_push_ready    ), //o
     .io_push_payload       (spiCtrl_io_rsp_payload                             ), //i
@@ -10210,10 +10210,10 @@ module Apb3SpiMasterCtrl (
       8'h0 : begin
         io_apb_PRDATA[31 : 31] = (spiCtrl_io_rsp_queueWithOccupancy_io_pop_valid ^ 1'b0);
         io_apb_PRDATA[7 : 0] = spiCtrl_io_rsp_queueWithOccupancy_io_pop_payload;
-        io_apb_PRDATA[24 : 16] = spiCtrl_io_rsp_queueWithOccupancy_io_occupancy;
+        io_apb_PRDATA[26 : 16] = spiCtrl_io_rsp_queueWithOccupancy_io_occupancy;
       end
       8'h04 : begin
-        io_apb_PRDATA[24 : 16] = bridge_cmdLogic_streamUnbuffered_queueWithAvailability_io_availability;
+        io_apb_PRDATA[26 : 16] = bridge_cmdLogic_streamUnbuffered_queueWithAvailability_io_availability;
         io_apb_PRDATA[0 : 0] = bridge_interruptCtrl_cmdIntEnable;
         io_apb_PRDATA[1 : 1] = bridge_interruptCtrl_rspIntEnable;
         io_apb_PRDATA[8 : 8] = bridge_interruptCtrl_cmdInt;
@@ -10362,19 +10362,26 @@ module Apb3UartCtrl (
   wire                bridge_write_streamUnbuffered_queueWithOccupancy_io_push_ready;
   wire                bridge_write_streamUnbuffered_queueWithOccupancy_io_pop_valid;
   wire       [7:0]    bridge_write_streamUnbuffered_queueWithOccupancy_io_pop_payload;
-  wire       [4:0]    bridge_write_streamUnbuffered_queueWithOccupancy_io_occupancy;
-  wire       [4:0]    bridge_write_streamUnbuffered_queueWithOccupancy_io_availability;
+  wire       [10:0]   bridge_write_streamUnbuffered_queueWithOccupancy_io_occupancy;
+  wire       [10:0]   bridge_write_streamUnbuffered_queueWithOccupancy_io_availability;
   wire                uartCtrl_2_io_read_queueWithOccupancy_io_push_ready;
   wire                uartCtrl_2_io_read_queueWithOccupancy_io_pop_valid;
   wire       [7:0]    uartCtrl_2_io_read_queueWithOccupancy_io_pop_payload;
-  wire       [4:0]    uartCtrl_2_io_read_queueWithOccupancy_io_occupancy;
-  wire       [4:0]    uartCtrl_2_io_read_queueWithOccupancy_io_availability;
+  wire       [10:0]   uartCtrl_2_io_read_queueWithOccupancy_io_occupancy;
+  wire       [10:0]   uartCtrl_2_io_read_queueWithOccupancy_io_availability;
   wire       [0:0]    _zz_bridge_misc_readError;
   wire       [0:0]    _zz_bridge_misc_readOverflowError;
   wire       [0:0]    _zz_bridge_misc_breakDetected;
   wire       [0:0]    _zz_bridge_misc_doBreak;
   wire       [0:0]    _zz_bridge_misc_doBreak_1;
-  wire       [4:0]    _zz_io_apb_PRDATA;
+  wire       [7:0]    _zz_io_apb_PRDATA_3;
+  wire       [10:0]   _zz_io_apb_PRDATA_4;
+  wire       [10:0]   _zz_io_apb_PRDATA_5;
+  wire       [10:0]   _zz_io_apb_PRDATA_6;
+  wire       [7:0]    _zz_io_apb_PRDATA_7;
+  wire       [10:0]   _zz_io_apb_PRDATA_8;
+  wire       [10:0]   _zz_io_apb_PRDATA_9;
+  wire       [10:0]   _zz_io_apb_PRDATA_10;
   wire       [19:0]   _zz_bridge_uartConfigReg_clockDivider;
   wire       [19:0]   _zz_bridge_uartConfigReg_clockDivider_1;
   wire                busCtrl_askWrite;
@@ -10389,9 +10396,12 @@ module Apb3UartCtrl (
   wire                bridge_write_streamUnbuffered_valid;
   wire                bridge_write_streamUnbuffered_ready;
   wire       [7:0]    bridge_write_streamUnbuffered_payload;
+  wire       [10:0]   _zz_io_apb_PRDATA;
+  wire       [7:0]    _zz_io_apb_PRDATA_1;
   reg                 bridge_read_streamBreaked_valid;
   reg                 bridge_read_streamBreaked_ready;
   wire       [7:0]    bridge_read_streamBreaked_payload;
+  wire       [7:0]    _zz_io_apb_PRDATA_2;
   reg                 bridge_interruptCtrl_writeIntEnable;
   reg                 bridge_interruptCtrl_readIntEnable;
   wire                bridge_interruptCtrl_readInt;
@@ -10430,7 +10440,14 @@ module Apb3UartCtrl (
   assign _zz_bridge_misc_breakDetected = 1'b0;
   assign _zz_bridge_misc_doBreak = 1'b1;
   assign _zz_bridge_misc_doBreak_1 = 1'b0;
-  assign _zz_io_apb_PRDATA = (5'h10 - bridge_write_streamUnbuffered_queueWithOccupancy_io_occupancy);
+  assign _zz_io_apb_PRDATA_4 = ((_zz_io_apb_PRDATA < _zz_io_apb_PRDATA_5) ? _zz_io_apb_PRDATA : _zz_io_apb_PRDATA_6);
+  assign _zz_io_apb_PRDATA_3 = _zz_io_apb_PRDATA_4[7:0];
+  assign _zz_io_apb_PRDATA_5 = {3'd0, _zz_io_apb_PRDATA_1};
+  assign _zz_io_apb_PRDATA_6 = {3'd0, _zz_io_apb_PRDATA_1};
+  assign _zz_io_apb_PRDATA_8 = ((uartCtrl_2_io_read_queueWithOccupancy_io_occupancy < _zz_io_apb_PRDATA_9) ? uartCtrl_2_io_read_queueWithOccupancy_io_occupancy : _zz_io_apb_PRDATA_10);
+  assign _zz_io_apb_PRDATA_7 = _zz_io_apb_PRDATA_8[7:0];
+  assign _zz_io_apb_PRDATA_9 = {3'd0, _zz_io_apb_PRDATA_2};
+  assign _zz_io_apb_PRDATA_10 = {3'd0, _zz_io_apb_PRDATA_2};
   assign _zz_bridge_uartConfigReg_clockDivider_1 = io_apb_PWDATA[19 : 0];
   assign _zz_bridge_uartConfigReg_clockDivider = _zz_bridge_uartConfigReg_clockDivider_1;
   UartCtrl uartCtrl_2 (
@@ -10521,9 +10538,9 @@ module Apb3UartCtrl (
         io_apb_PRDATA[7 : 0] = bridge_read_streamBreaked_payload;
       end
       5'h04 : begin
-        io_apb_PRDATA[20 : 16] = _zz_io_apb_PRDATA;
+        io_apb_PRDATA[23 : 16] = _zz_io_apb_PRDATA_3;
         io_apb_PRDATA[15 : 15] = bridge_write_streamUnbuffered_queueWithOccupancy_io_pop_valid;
-        io_apb_PRDATA[28 : 24] = uartCtrl_2_io_read_queueWithOccupancy_io_occupancy;
+        io_apb_PRDATA[31 : 24] = _zz_io_apb_PRDATA_7;
         io_apb_PRDATA[0 : 0] = bridge_interruptCtrl_writeIntEnable;
         io_apb_PRDATA[1 : 1] = bridge_interruptCtrl_readIntEnable;
         io_apb_PRDATA[8 : 8] = bridge_interruptCtrl_writeInt;
@@ -10560,6 +10577,8 @@ module Apb3UartCtrl (
   assign bridge_write_streamUnbuffered_valid = _zz_bridge_write_streamUnbuffered_valid;
   assign bridge_write_streamUnbuffered_payload = io_apb_PWDATA[7 : 0];
   assign bridge_write_streamUnbuffered_ready = bridge_write_streamUnbuffered_queueWithOccupancy_io_push_ready;
+  assign _zz_io_apb_PRDATA = (11'h400 - bridge_write_streamUnbuffered_queueWithOccupancy_io_occupancy);
+  assign _zz_io_apb_PRDATA_1 = 8'hff;
   always @(*) begin
     bridge_read_streamBreaked_valid = uartCtrl_2_io_read_queueWithOccupancy_io_pop_valid;
     if(uartCtrl_2_io_readBreak) begin
@@ -10588,6 +10607,7 @@ module Apb3UartCtrl (
     endcase
   end
 
+  assign _zz_io_apb_PRDATA_2 = 8'hff;
   assign bridge_interruptCtrl_readInt = (bridge_interruptCtrl_readIntEnable && bridge_read_streamBreaked_valid);
   assign bridge_interruptCtrl_writeInt = (bridge_interruptCtrl_writeIntEnable && (! bridge_write_streamUnbuffered_queueWithOccupancy_io_pop_valid));
   assign bridge_interruptCtrl_interrupt = (bridge_interruptCtrl_readInt || bridge_interruptCtrl_writeInt);
@@ -15551,161 +15571,13 @@ module InstructionCache (
 
 endmodule
 
-//StreamFifo_5 replaced by StreamFifo_5
+//StreamFifo replaced by StreamFifo
 
 //StreamFifo_4 replaced by StreamFifo_4
 
 //SpiMasterCtrl replaced by SpiMasterCtrl
 
-module StreamFifo_5 (
-  input               io_push_valid,
-  output              io_push_ready,
-  input      [7:0]    io_push_payload,
-  output              io_pop_valid,
-  input               io_pop_ready,
-  output     [7:0]    io_pop_payload,
-  input               io_flush,
-  output     [8:0]    io_occupancy,
-  output     [8:0]    io_availability,
-  input               io_axiClk,
-  input               resetCtrl_axiReset
-);
-  reg        [7:0]    _zz_logic_ram_port0;
-  wire       [7:0]    _zz_logic_pushPtr_valueNext;
-  wire       [0:0]    _zz_logic_pushPtr_valueNext_1;
-  wire       [7:0]    _zz_logic_popPtr_valueNext;
-  wire       [0:0]    _zz_logic_popPtr_valueNext_1;
-  wire                _zz_logic_ram_port;
-  wire                _zz_io_pop_payload;
-  wire       [7:0]    _zz_io_availability;
-  reg                 _zz_1;
-  reg                 logic_pushPtr_willIncrement;
-  reg                 logic_pushPtr_willClear;
-  reg        [7:0]    logic_pushPtr_valueNext;
-  reg        [7:0]    logic_pushPtr_value;
-  wire                logic_pushPtr_willOverflowIfInc;
-  wire                logic_pushPtr_willOverflow;
-  reg                 logic_popPtr_willIncrement;
-  reg                 logic_popPtr_willClear;
-  reg        [7:0]    logic_popPtr_valueNext;
-  reg        [7:0]    logic_popPtr_value;
-  wire                logic_popPtr_willOverflowIfInc;
-  wire                logic_popPtr_willOverflow;
-  wire                logic_ptrMatch;
-  reg                 logic_risingOccupancy;
-  wire                logic_pushing;
-  wire                logic_popping;
-  wire                logic_empty;
-  wire                logic_full;
-  reg                 _zz_io_pop_valid;
-  wire                when_Stream_l933;
-  wire       [7:0]    logic_ptrDif;
-  reg [7:0] logic_ram [0:255];
-
-  assign _zz_logic_pushPtr_valueNext_1 = logic_pushPtr_willIncrement;
-  assign _zz_logic_pushPtr_valueNext = {7'd0, _zz_logic_pushPtr_valueNext_1};
-  assign _zz_logic_popPtr_valueNext_1 = logic_popPtr_willIncrement;
-  assign _zz_logic_popPtr_valueNext = {7'd0, _zz_logic_popPtr_valueNext_1};
-  assign _zz_io_availability = (logic_popPtr_value - logic_pushPtr_value);
-  assign _zz_io_pop_payload = 1'b1;
-  always @(posedge io_axiClk) begin
-    if(_zz_io_pop_payload) begin
-      _zz_logic_ram_port0 <= logic_ram[logic_popPtr_valueNext];
-    end
-  end
-
-  always @(posedge io_axiClk) begin
-    if(_zz_1) begin
-      logic_ram[logic_pushPtr_value] <= io_push_payload;
-    end
-  end
-
-  always @(*) begin
-    _zz_1 = 1'b0;
-    if(logic_pushing) begin
-      _zz_1 = 1'b1;
-    end
-  end
-
-  always @(*) begin
-    logic_pushPtr_willIncrement = 1'b0;
-    if(logic_pushing) begin
-      logic_pushPtr_willIncrement = 1'b1;
-    end
-  end
-
-  always @(*) begin
-    logic_pushPtr_willClear = 1'b0;
-    if(io_flush) begin
-      logic_pushPtr_willClear = 1'b1;
-    end
-  end
-
-  assign logic_pushPtr_willOverflowIfInc = (logic_pushPtr_value == 8'hff);
-  assign logic_pushPtr_willOverflow = (logic_pushPtr_willOverflowIfInc && logic_pushPtr_willIncrement);
-  always @(*) begin
-    logic_pushPtr_valueNext = (logic_pushPtr_value + _zz_logic_pushPtr_valueNext);
-    if(logic_pushPtr_willClear) begin
-      logic_pushPtr_valueNext = 8'h0;
-    end
-  end
-
-  always @(*) begin
-    logic_popPtr_willIncrement = 1'b0;
-    if(logic_popping) begin
-      logic_popPtr_willIncrement = 1'b1;
-    end
-  end
-
-  always @(*) begin
-    logic_popPtr_willClear = 1'b0;
-    if(io_flush) begin
-      logic_popPtr_willClear = 1'b1;
-    end
-  end
-
-  assign logic_popPtr_willOverflowIfInc = (logic_popPtr_value == 8'hff);
-  assign logic_popPtr_willOverflow = (logic_popPtr_willOverflowIfInc && logic_popPtr_willIncrement);
-  always @(*) begin
-    logic_popPtr_valueNext = (logic_popPtr_value + _zz_logic_popPtr_valueNext);
-    if(logic_popPtr_willClear) begin
-      logic_popPtr_valueNext = 8'h0;
-    end
-  end
-
-  assign logic_ptrMatch = (logic_pushPtr_value == logic_popPtr_value);
-  assign logic_pushing = (io_push_valid && io_push_ready);
-  assign logic_popping = (io_pop_valid && io_pop_ready);
-  assign logic_empty = (logic_ptrMatch && (! logic_risingOccupancy));
-  assign logic_full = (logic_ptrMatch && logic_risingOccupancy);
-  assign io_push_ready = (! logic_full);
-  assign io_pop_valid = ((! logic_empty) && (! (_zz_io_pop_valid && (! logic_full))));
-  assign io_pop_payload = _zz_logic_ram_port0;
-  assign when_Stream_l933 = (logic_pushing != logic_popping);
-  assign logic_ptrDif = (logic_pushPtr_value - logic_popPtr_value);
-  assign io_occupancy = {(logic_risingOccupancy && logic_ptrMatch),logic_ptrDif};
-  assign io_availability = {((! logic_risingOccupancy) && logic_ptrMatch),_zz_io_availability};
-  always @(posedge io_axiClk or posedge resetCtrl_axiReset) begin
-    if(resetCtrl_axiReset) begin
-      logic_pushPtr_value <= 8'h0;
-      logic_popPtr_value <= 8'h0;
-      logic_risingOccupancy <= 1'b0;
-      _zz_io_pop_valid <= 1'b0;
-    end else begin
-      logic_pushPtr_value <= logic_pushPtr_valueNext;
-      logic_popPtr_value <= logic_popPtr_valueNext;
-      _zz_io_pop_valid <= (logic_popPtr_valueNext == logic_pushPtr_value);
-      if(when_Stream_l933) begin
-        logic_risingOccupancy <= logic_pushing;
-      end
-      if(io_flush) begin
-        logic_risingOccupancy <= 1'b0;
-      end
-    end
-  end
-
-
-endmodule
+//StreamFifo replaced by StreamFifo
 
 module StreamFifo_4 (
   input               io_push_valid,
@@ -15717,31 +15589,31 @@ module StreamFifo_4 (
   output     `SpiMasterCtrlCmdMode_binary_sequential_type io_pop_payload_mode,
   output     [8:0]    io_pop_payload_args,
   input               io_flush,
-  output     [8:0]    io_occupancy,
-  output     [8:0]    io_availability,
+  output     [10:0]   io_occupancy,
+  output     [10:0]   io_availability,
   input               io_axiClk,
   input               resetCtrl_axiReset
 );
   reg        [9:0]    _zz_logic_ram_port0;
-  wire       [7:0]    _zz_logic_pushPtr_valueNext;
+  wire       [9:0]    _zz_logic_pushPtr_valueNext;
   wire       [0:0]    _zz_logic_pushPtr_valueNext_1;
-  wire       [7:0]    _zz_logic_popPtr_valueNext;
+  wire       [9:0]    _zz_logic_popPtr_valueNext;
   wire       [0:0]    _zz_logic_popPtr_valueNext_1;
   wire                _zz_logic_ram_port;
   wire                _zz__zz_io_pop_payload_mode_1;
   wire       [9:0]    _zz_logic_ram_port_1;
-  wire       [7:0]    _zz_io_availability;
+  wire       [9:0]    _zz_io_availability;
   reg                 _zz_1;
   reg                 logic_pushPtr_willIncrement;
   reg                 logic_pushPtr_willClear;
-  reg        [7:0]    logic_pushPtr_valueNext;
-  reg        [7:0]    logic_pushPtr_value;
+  reg        [9:0]    logic_pushPtr_valueNext;
+  reg        [9:0]    logic_pushPtr_value;
   wire                logic_pushPtr_willOverflowIfInc;
   wire                logic_pushPtr_willOverflow;
   reg                 logic_popPtr_willIncrement;
   reg                 logic_popPtr_willClear;
-  reg        [7:0]    logic_popPtr_valueNext;
-  reg        [7:0]    logic_popPtr_value;
+  reg        [9:0]    logic_popPtr_valueNext;
+  reg        [9:0]    logic_popPtr_value;
   wire                logic_popPtr_willOverflowIfInc;
   wire                logic_popPtr_willOverflow;
   wire                logic_ptrMatch;
@@ -15755,7 +15627,7 @@ module StreamFifo_4 (
   wire       [9:0]    _zz_io_pop_payload_mode_1;
   wire       `SpiMasterCtrlCmdMode_binary_sequential_type _zz_io_pop_payload_mode_2;
   wire                when_Stream_l933;
-  wire       [7:0]    logic_ptrDif;
+  wire       [9:0]    logic_ptrDif;
   `ifndef SYNTHESIS
   reg [31:0] io_push_payload_mode_string;
   reg [31:0] io_pop_payload_mode_string;
@@ -15763,12 +15635,12 @@ module StreamFifo_4 (
   reg [31:0] _zz_io_pop_payload_mode_2_string;
   `endif
 
-  reg [9:0] logic_ram [0:255];
+  reg [9:0] logic_ram [0:1023];
 
   assign _zz_logic_pushPtr_valueNext_1 = logic_pushPtr_willIncrement;
-  assign _zz_logic_pushPtr_valueNext = {7'd0, _zz_logic_pushPtr_valueNext_1};
+  assign _zz_logic_pushPtr_valueNext = {9'd0, _zz_logic_pushPtr_valueNext_1};
   assign _zz_logic_popPtr_valueNext_1 = logic_popPtr_willIncrement;
-  assign _zz_logic_popPtr_valueNext = {7'd0, _zz_logic_popPtr_valueNext_1};
+  assign _zz_logic_popPtr_valueNext = {9'd0, _zz_logic_popPtr_valueNext_1};
   assign _zz_io_availability = (logic_popPtr_value - logic_pushPtr_value);
   assign _zz__zz_io_pop_payload_mode_1 = 1'b1;
   assign _zz_logic_ram_port_1 = {io_push_payload_args,io_push_payload_mode};
@@ -15836,12 +15708,12 @@ module StreamFifo_4 (
     end
   end
 
-  assign logic_pushPtr_willOverflowIfInc = (logic_pushPtr_value == 8'hff);
+  assign logic_pushPtr_willOverflowIfInc = (logic_pushPtr_value == 10'h3ff);
   assign logic_pushPtr_willOverflow = (logic_pushPtr_willOverflowIfInc && logic_pushPtr_willIncrement);
   always @(*) begin
     logic_pushPtr_valueNext = (logic_pushPtr_value + _zz_logic_pushPtr_valueNext);
     if(logic_pushPtr_willClear) begin
-      logic_pushPtr_valueNext = 8'h0;
+      logic_pushPtr_valueNext = 10'h0;
     end
   end
 
@@ -15859,12 +15731,12 @@ module StreamFifo_4 (
     end
   end
 
-  assign logic_popPtr_willOverflowIfInc = (logic_popPtr_value == 8'hff);
+  assign logic_popPtr_willOverflowIfInc = (logic_popPtr_value == 10'h3ff);
   assign logic_popPtr_willOverflow = (logic_popPtr_willOverflowIfInc && logic_popPtr_willIncrement);
   always @(*) begin
     logic_popPtr_valueNext = (logic_popPtr_value + _zz_logic_popPtr_valueNext);
     if(logic_popPtr_willClear) begin
-      logic_popPtr_valueNext = 8'h0;
+      logic_popPtr_valueNext = 10'h0;
     end
   end
 
@@ -15886,8 +15758,8 @@ module StreamFifo_4 (
   assign io_availability = {((! logic_risingOccupancy) && logic_ptrMatch),_zz_io_availability};
   always @(posedge io_axiClk or posedge resetCtrl_axiReset) begin
     if(resetCtrl_axiReset) begin
-      logic_pushPtr_value <= 8'h0;
-      logic_popPtr_value <= 8'h0;
+      logic_pushPtr_value <= 10'h0;
+      logic_popPtr_value <= 10'h0;
       logic_risingOccupancy <= 1'b0;
       _zz_io_pop_valid <= 1'b0;
     end else begin
@@ -16128,30 +16000,30 @@ module StreamFifo (
   input               io_pop_ready,
   output     [7:0]    io_pop_payload,
   input               io_flush,
-  output     [4:0]    io_occupancy,
-  output     [4:0]    io_availability,
+  output     [10:0]   io_occupancy,
+  output     [10:0]   io_availability,
   input               io_axiClk,
   input               resetCtrl_axiReset
 );
   reg        [7:0]    _zz_logic_ram_port0;
-  wire       [3:0]    _zz_logic_pushPtr_valueNext;
+  wire       [9:0]    _zz_logic_pushPtr_valueNext;
   wire       [0:0]    _zz_logic_pushPtr_valueNext_1;
-  wire       [3:0]    _zz_logic_popPtr_valueNext;
+  wire       [9:0]    _zz_logic_popPtr_valueNext;
   wire       [0:0]    _zz_logic_popPtr_valueNext_1;
   wire                _zz_logic_ram_port;
   wire                _zz_io_pop_payload;
-  wire       [3:0]    _zz_io_availability;
+  wire       [9:0]    _zz_io_availability;
   reg                 _zz_1;
   reg                 logic_pushPtr_willIncrement;
   reg                 logic_pushPtr_willClear;
-  reg        [3:0]    logic_pushPtr_valueNext;
-  reg        [3:0]    logic_pushPtr_value;
+  reg        [9:0]    logic_pushPtr_valueNext;
+  reg        [9:0]    logic_pushPtr_value;
   wire                logic_pushPtr_willOverflowIfInc;
   wire                logic_pushPtr_willOverflow;
   reg                 logic_popPtr_willIncrement;
   reg                 logic_popPtr_willClear;
-  reg        [3:0]    logic_popPtr_valueNext;
-  reg        [3:0]    logic_popPtr_value;
+  reg        [9:0]    logic_popPtr_valueNext;
+  reg        [9:0]    logic_popPtr_value;
   wire                logic_popPtr_willOverflowIfInc;
   wire                logic_popPtr_willOverflow;
   wire                logic_ptrMatch;
@@ -16162,13 +16034,13 @@ module StreamFifo (
   wire                logic_full;
   reg                 _zz_io_pop_valid;
   wire                when_Stream_l933;
-  wire       [3:0]    logic_ptrDif;
-  reg [7:0] logic_ram [0:15];
+  wire       [9:0]    logic_ptrDif;
+  reg [7:0] logic_ram [0:1023];
 
   assign _zz_logic_pushPtr_valueNext_1 = logic_pushPtr_willIncrement;
-  assign _zz_logic_pushPtr_valueNext = {3'd0, _zz_logic_pushPtr_valueNext_1};
+  assign _zz_logic_pushPtr_valueNext = {9'd0, _zz_logic_pushPtr_valueNext_1};
   assign _zz_logic_popPtr_valueNext_1 = logic_popPtr_willIncrement;
-  assign _zz_logic_popPtr_valueNext = {3'd0, _zz_logic_popPtr_valueNext_1};
+  assign _zz_logic_popPtr_valueNext = {9'd0, _zz_logic_popPtr_valueNext_1};
   assign _zz_io_availability = (logic_popPtr_value - logic_pushPtr_value);
   assign _zz_io_pop_payload = 1'b1;
   always @(posedge io_axiClk) begin
@@ -16204,12 +16076,12 @@ module StreamFifo (
     end
   end
 
-  assign logic_pushPtr_willOverflowIfInc = (logic_pushPtr_value == 4'b1111);
+  assign logic_pushPtr_willOverflowIfInc = (logic_pushPtr_value == 10'h3ff);
   assign logic_pushPtr_willOverflow = (logic_pushPtr_willOverflowIfInc && logic_pushPtr_willIncrement);
   always @(*) begin
     logic_pushPtr_valueNext = (logic_pushPtr_value + _zz_logic_pushPtr_valueNext);
     if(logic_pushPtr_willClear) begin
-      logic_pushPtr_valueNext = 4'b0000;
+      logic_pushPtr_valueNext = 10'h0;
     end
   end
 
@@ -16227,12 +16099,12 @@ module StreamFifo (
     end
   end
 
-  assign logic_popPtr_willOverflowIfInc = (logic_popPtr_value == 4'b1111);
+  assign logic_popPtr_willOverflowIfInc = (logic_popPtr_value == 10'h3ff);
   assign logic_popPtr_willOverflow = (logic_popPtr_willOverflowIfInc && logic_popPtr_willIncrement);
   always @(*) begin
     logic_popPtr_valueNext = (logic_popPtr_value + _zz_logic_popPtr_valueNext);
     if(logic_popPtr_willClear) begin
-      logic_popPtr_valueNext = 4'b0000;
+      logic_popPtr_valueNext = 10'h0;
     end
   end
 
@@ -16250,8 +16122,8 @@ module StreamFifo (
   assign io_availability = {((! logic_risingOccupancy) && logic_ptrMatch),_zz_io_availability};
   always @(posedge io_axiClk or posedge resetCtrl_axiReset) begin
     if(resetCtrl_axiReset) begin
-      logic_pushPtr_value <= 4'b0000;
-      logic_popPtr_value <= 4'b0000;
+      logic_pushPtr_value <= 10'h0;
+      logic_popPtr_value <= 10'h0;
       logic_risingOccupancy <= 1'b0;
       _zz_io_pop_valid <= 1'b0;
     end else begin
