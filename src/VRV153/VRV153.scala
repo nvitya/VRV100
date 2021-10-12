@@ -10,8 +10,9 @@ VexRiscV CPU Core (I32M):
  - 4k Data Cache (below 0xF0000000)
  - JTAG Debugging Interface (special openocd required)
 Integrater Peripherals:
+ 0x10000000: OCRAM, 16 kByte
  0x40000000: SDRAM, 32 MByte
- 0x80000000: OCRAM, 16 kByte
+ 0x80000000: BOOTROM(RAM), 4 kByte
  0xF0000000: GPIOA (32 bit, bidirectional, independent bit control)
  0xF0001000: GPIOB (32 bit, bidirectional, independent bit control)
  0xF0010000: UART1, used as debug console
@@ -97,8 +98,8 @@ object VRV153Config
           timerWidth        = 16,
           dataWidth         = 8
         ),
-        cmdFifoDepth = 1024,
-        rspFifoDepth = 1024
+        cmdFifoDepth = 512,
+        rspFifoDepth = 512
       ),
       spim2CtrlConfig = SpiMasterCtrlMemoryMappedConfig(
         ctrlGenerics = SpiMasterCtrlGenerics(
@@ -106,8 +107,8 @@ object VRV153Config
           timerWidth        = 16,
           dataWidth         = 8
         ),
-        cmdFifoDepth = 1024,
-        rspFifoDepth = 1024
+        cmdFifoDepth = 512,
+        rspFifoDepth = 512
       ),
       cpuPlugins = ArrayBuffer(
         //new PcManagerSimplePlugin(0x80000000l, false),
@@ -323,6 +324,13 @@ class VRV153(config: VRV153Config) extends Component
   )
 
   val axi = new ClockingArea(axiClockDomain) {
+
+    val bootrom = Axi4SharedOnChipRam(
+      dataWidth = 32,
+      byteCount = 4 kB,
+      idWidth = 4
+    )
+
     val ram = Axi4SharedOnChipRam(
       dataWidth = 32,
       byteCount = onChipRamSize,
@@ -410,16 +418,17 @@ class VRV153(config: VRV153Config) extends Component
     val axiCrossbar = Axi4CrossbarFactory()
 
     axiCrossbar.addSlaves(
-      ram.io.axi        -> (0x80000000L,   onChipRamSize),
+      bootrom.io.axi    -> (0x80000000L,   4 kB),
+      ram.io.axi        -> (0x10000000L,   onChipRamSize),
       sdramCtrl.io.axi  -> (0x40000000L,   sdramLayout.capacity),
       apbBridge.io.axi  -> (0xF0000000L,   1 MB),
       apbBridge2.io.axi -> (0xF1000000L,   1 MB)
     )
 
     axiCrossbar.addConnections(
-      core.iBus       -> List(ram.io.axi, sdramCtrl.io.axi),
-      core.dBus       -> List(ram.io.axi, sdramCtrl.io.axi, apbBridge.io.axi, apbBridge2.io.axi),
-      vgaCtrl.io.axi  -> List(            sdramCtrl.io.axi)
+      core.iBus       -> List( bootrom.io.axi, ram.io.axi, sdramCtrl.io.axi),
+      core.dBus       -> List( bootrom.io.axi, ram.io.axi, sdramCtrl.io.axi, apbBridge.io.axi, apbBridge2.io.axi ),
+      vgaCtrl.io.axi  -> List( sdramCtrl.io.axi)
     )
 
 
@@ -438,6 +447,13 @@ class VRV153(config: VRV153Config) extends Component
     })
 
     axiCrossbar.addPipelining(sdramCtrl.io.axi)((crossbar,ctrl) => {
+      crossbar.sharedCmd.halfPipe()  >>  ctrl.sharedCmd
+      crossbar.writeData            >/-> ctrl.writeData
+      crossbar.writeRsp              <<  ctrl.writeRsp
+      crossbar.readRsp               <<  ctrl.readRsp
+    })
+
+    axiCrossbar.addPipelining(bootrom.io.axi)((crossbar,ctrl) => {
       crossbar.sharedCmd.halfPipe()  >>  ctrl.sharedCmd
       crossbar.writeData            >/-> ctrl.writeData
       crossbar.writeRsp              <<  ctrl.writeRsp
@@ -506,6 +522,7 @@ object VRV153
     config.generateVerilog(
 	 {
       val toplevel = new VRV153(VRV153Config.default)
+      HexTools.initRam(toplevel.axi.bootrom.ram, "bootrom_VRV153.hex", 0x80000000l)
       toplevel
     })
   }
