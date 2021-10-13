@@ -121,7 +121,7 @@ extern "C" __attribute__((noreturn)) void _start(unsigned self_flashing)  // sel
 	// BOOTBLOCK_STADDR provided as build option
 	spiflash_load(BOOTBLOCK_STADDR, &apphead, sizeof(apphead));
 
-	if ((apphead.signature == BOOTBLOCK_SIGNATURE) && ((apphead.compid >> 16) == 0x0153))
+	if ((apphead.signature == BOOTBLOCK_SIGNATURE) && ((apphead.compid >> 16) == (VRV100_COMPID >> 16)))
 	{
 	  // load the body to the destination
 	  spiflash_load(BOOTBLOCK_STADDR, (void *)apphead.addr_load, apphead.length + sizeof(apphead));
