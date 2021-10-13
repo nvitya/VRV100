@@ -1,5 +1,5 @@
 /************************************
-VRV153 SoC:
+VRV134 SoC:
 -----------
 VexRiscV CPU Core (I32M):
  - I32 with the following extensions: Mul-Div (M)
@@ -10,15 +10,15 @@ VexRiscV CPU Core (I32M):
  - 4k Data Cache (below 0xF0000000)
  - JTAG Debugging Interface (special openocd required)
 Integrater Peripherals:
- 0x10000000: OCRAM, 16 kByte
- 0x40000000: SDRAM, 32 MByte
+ 0x10000000: OCRAM, 32 kByte
+ (no SDRAM)
  0x80000000: BOOTROM(RAM), 4 kByte
  0xF0000000: GPIOA (32 bit, bidirectional, independent bit control)
  0xF0001000: GPIOB (32 bit, bidirectional, independent bit control)
  0xF0010000: UART1, used as debug console
  0xF0011000: UART2
  0xF0020000: Timer
- 0xF0030000: VGA Controller, frame buffer in SDRAM
+ (no VGA controller)
  0xF0040000: SPI Master 1 (CS0: SPI Flash)
  0xF0041000: SPI Master 2
  0xF1000000: External APB3 Bus (Master) - for user extensions
@@ -36,12 +36,7 @@ import spinal.lib.bus.amba4.axi._
 import spinal.lib.com.jtag.Jtag
 import spinal.lib.com.uart.{Apb3UartCtrl, Uart, UartCtrlGenerics, UartCtrlMemoryMappedConfig}
 import spinal.lib.com.spi._
-import spinal.lib.graphic.RgbConfig
-import spinal.lib.graphic.vga.{Axi4VgaCtrl, Axi4VgaCtrlGenerics, Vga}
 import spinal.lib.io.TriStateArray
-import spinal.lib.memory.sdram.SdramGeneration.SDR
-import spinal.lib.memory.sdram._
-import spinal.lib.memory.sdram.sdr.{Axi4SharedSdramCtrl, W9825G6JH6, SdramInterface, SdramTimings}
 import spinal.lib.misc.HexTools
 import spinal.lib.soc.pinsec.{PinsecTimerCtrl, PinsecTimerCtrlExternal}
 import spinal.lib.system.debugger.{JtagAxi4SharedDebugger, JtagBridge, SystemDebugger, SystemDebuggerConfig}
@@ -49,11 +44,9 @@ import spinal.lib.system.debugger.{JtagAxi4SharedDebugger, JtagBridge, SystemDeb
 import scala.collection.mutable.ArrayBuffer
 
 
-case class VRV153Config(
+case class VRV143Config(
   axiFrequency : HertzNumber,
   onChipRamSize : BigInt,
-  sdramLayout: SdramLayout,
-  sdramTimings: SdramTimings,
   cpuPlugins : ArrayBuffer[Plugin[VexRiscv]],
   uart1CtrlConfig : UartCtrlMemoryMappedConfig,
   uart2CtrlConfig : UartCtrlMemoryMappedConfig,
@@ -61,15 +54,13 @@ case class VRV153Config(
   spim2CtrlConfig : SpiMasterCtrlMemoryMappedConfig
 )
 
-object VRV153Config
+object VRV143Config
 {
   def default =
   {
-    val config = VRV153Config(
+    val config = VRV143Config(
       axiFrequency = 100 MHz,
-      onChipRamSize  = 16 kB,
-      sdramLayout = W9825G6JH6.layout,
-      sdramTimings = W9825G6JH6.timingGrade7,
+      onChipRamSize  = 32 kB,
       uart1CtrlConfig = UartCtrlMemoryMappedConfig(
         uartCtrlConfig = UartCtrlGenerics(
           dataWidthMax      = 8,
@@ -207,29 +198,26 @@ object VRV153Config
   }
 }
 
-class VRV153(config: VRV153Config) extends Component
+class VRV143(config: VRV143Config) extends Component
 {
   //Legacy constructor
   def this(axiFrequency: HertzNumber)
   {
-    this(VRV153Config.default.copy(axiFrequency = axiFrequency))
+    this(VRV143Config.default.copy(axiFrequency = axiFrequency))
   }
 
   import config._
   val debug = true
   val interruptCount = 4
-  def vgaRgbConfig = RgbConfig(5,6,5)
 
   val io = new Bundle
   {
     //Clocks / reset
     val asyncReset = in Bool()
     val axiClk     = in Bool()
-    val vgaClk     = in Bool()
 
     //Main components IO
     val jtag       = slave(Jtag())
-    val sdram      = master(SdramInterface(sdramLayout))
 
     //Peripherals IO
     val gpioA         = master(TriStateArray(32 bits))
@@ -238,8 +226,6 @@ class VRV153(config: VRV153Config) extends Component
     val uart2         = master(Uart())
     val spim1         = master(SpiMaster(spim1CtrlConfig.ctrlGenerics.ssWidth))
     val spim2         = master(SpiMaster(spim2CtrlConfig.ctrlGenerics.ssWidth))
-
-    val vga           = master(Vga(vgaRgbConfig))
 
     val timerExternal = in(PinsecTimerCtrlExternal())
     val coreInterrupt = in Bool()
@@ -276,7 +262,6 @@ class VRV153(config: VRV153Config) extends Component
     //Create all reset used later in the design
     val systemReset  = RegNext(systemResetUnbuffered)
     val axiReset     = RegNext(systemResetUnbuffered)
-    val vgaReset     = BufferCC(axiReset)
   }
 
   val axiClockDomain = ClockDomain(
@@ -291,11 +276,6 @@ class VRV153(config: VRV153Config) extends Component
     frequency = FixedFrequency(axiFrequency)
   )
 
-  val vgaClockDomain = ClockDomain(
-    clock = io.vgaClk,
-    reset = resetCtrl.vgaReset
-  )
-
   val axi = new ClockingArea(axiClockDomain) {
 
     val bootrom = Axi4SharedOnChipRam(
@@ -308,14 +288,6 @@ class VRV153(config: VRV153Config) extends Component
       dataWidth = 32,
       byteCount = onChipRamSize,
       idWidth = 4
-    )
-
-    val sdramCtrl = Axi4SharedSdramCtrl(
-      axiDataWidth = 32,
-      axiIdWidth   = 4,
-      layout       = sdramLayout,
-      timing       = sdramTimings,
-      CAS          = 3
     )
 
     val apbBridge = Axi4SharedToApb3Bridge(
@@ -340,17 +312,6 @@ class VRV153(config: VRV153Config) extends Component
     )
 
     val timerCtrl = PinsecTimerCtrl()
-
-    val vgaCtrlConfig = Axi4VgaCtrlGenerics(
-      axiAddressWidth = 32,
-      axiDataWidth    = 32,
-      burstLength     = 8,
-      frameSizeMax    = 2048*1512*2,
-      fifoSize        = 512,
-      rgbConfig       = vgaRgbConfig,
-      vgaClock        = vgaClockDomain
-    )
-    val vgaCtrl = Axi4VgaCtrl(vgaCtrlConfig)
 
     val uart1Ctrl = Apb3UartCtrl(uart1CtrlConfig)
     val uart2Ctrl = Apb3UartCtrl(uart2CtrlConfig)
@@ -393,15 +354,13 @@ class VRV153(config: VRV153Config) extends Component
     axiCrossbar.addSlaves(
       bootrom.io.axi    -> (0x80000000L,   4 kB),
       ram.io.axi        -> (0x10000000L,   onChipRamSize),
-      sdramCtrl.io.axi  -> (0x40000000L,   sdramLayout.capacity),
       apbBridge.io.axi  -> (0xF0000000L,   1 MB),
       apbBridge2.io.axi -> (0xF1000000L,   1 MB)
     )
 
     axiCrossbar.addConnections(
-      core.iBus       -> List( bootrom.io.axi, ram.io.axi, sdramCtrl.io.axi),
-      core.dBus       -> List( bootrom.io.axi, ram.io.axi, sdramCtrl.io.axi, apbBridge.io.axi, apbBridge2.io.axi ),
-      vgaCtrl.io.axi  -> List( sdramCtrl.io.axi)
+      core.iBus       -> List( bootrom.io.axi, ram.io.axi),
+      core.dBus       -> List( bootrom.io.axi, ram.io.axi, apbBridge.io.axi, apbBridge2.io.axi )
     )
 
 
@@ -419,13 +378,6 @@ class VRV153(config: VRV153Config) extends Component
       crossbar.readRsp              << bridge.readRsp
     })
 
-    axiCrossbar.addPipelining(sdramCtrl.io.axi)((crossbar,ctrl) => {
-      crossbar.sharedCmd.halfPipe()  >>  ctrl.sharedCmd
-      crossbar.writeData            >/-> ctrl.writeData
-      crossbar.writeRsp              <<  ctrl.writeRsp
-      crossbar.readRsp               <<  ctrl.readRsp
-    })
-
     axiCrossbar.addPipelining(bootrom.io.axi)((crossbar,ctrl) => {
       crossbar.sharedCmd.halfPipe()  >>  ctrl.sharedCmd
       crossbar.writeData            >/-> ctrl.writeData
@@ -438,11 +390,6 @@ class VRV153(config: VRV153Config) extends Component
       crossbar.writeData            >/-> ctrl.writeData
       crossbar.writeRsp              <<  ctrl.writeRsp
       crossbar.readRsp               <<  ctrl.readRsp
-    })
-
-    axiCrossbar.addPipelining(vgaCtrl.io.axi)((ctrl,crossbar) => {
-      ctrl.readCmd.halfPipe()    >>  crossbar.readCmd
-      ctrl.readRsp               <<  crossbar.readRsp
     })
 
     axiCrossbar.addPipelining(core.dBus)((cpu,crossbar) => {
@@ -465,15 +412,11 @@ class VRV153(config: VRV153Config) extends Component
         uart1Ctrl.io.apb  -> (0x10000, 4 kB),
         uart2Ctrl.io.apb  -> (0x11000, 4 kB),
         timerCtrl.io.apb  -> (0x20000, 4 kB),
-        vgaCtrl.io.apb    -> (0x30000, 4 kB),
         spim1Ctrl.io.apb  -> (0x40000, 4 kB),
         spim2Ctrl.io.apb  -> (0x41000, 4 kB)
       )
     )
   }
-
-  io.sdram          <> axi.sdramCtrl.io.sdram
-  io.vga            <> axi.vgaCtrl.io.vga
 
   io.gpioA          <> axi.gpioACtrl.io.gpio
   io.gpioB          <> axi.gpioBCtrl.io.gpio
@@ -487,15 +430,15 @@ class VRV153(config: VRV153Config) extends Component
 }
 
 // Cyclone IV Starter Kit
-object VRV153
+object VRV143
 {
   def main(args: Array[String])
   {
     val config = SpinalConfig()
     config.generateVerilog(
 	 {
-      val toplevel = new VRV153(VRV153Config.default)
-      HexTools.initRam(toplevel.axi.bootrom.ram, "VRV153_1M.hex", 0x80000000l)
+      val toplevel = new VRV143(VRV143Config.default)
+      HexTools.initRam(toplevel.axi.bootrom.ram, "VRV143_1M.hex", 0x80000000l)
       toplevel
     })
   }

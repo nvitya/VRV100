@@ -1,5 +1,5 @@
 /************************************
-VRV153 SoC:
+VRV123 SoC:
 -----------
 VexRiscV CPU Core (I32M):
  - I32 with the following extensions: Mul-Div (M)
@@ -14,13 +14,13 @@ Integrater Peripherals:
  0x40000000: SDRAM, 32 MByte
  0x80000000: BOOTROM(RAM), 4 kByte
  0xF0000000: GPIOA (32 bit, bidirectional, independent bit control)
- 0xF0001000: GPIOB (32 bit, bidirectional, independent bit control)
+ (no GPIOB)
  0xF0010000: UART1, used as debug console
- 0xF0011000: UART2
+ (no UART2)
  0xF0020000: Timer
- 0xF0030000: VGA Controller, frame buffer in SDRAM
+ (no VGA controller)
  0xF0040000: SPI Master 1 (CS0: SPI Flash)
- 0xF0041000: SPI Master 2
+ (no SPI2)
  0xF1000000: External APB3 Bus (Master) - for user extensions
 */
 
@@ -37,7 +37,6 @@ import spinal.lib.com.jtag.Jtag
 import spinal.lib.com.uart.{Apb3UartCtrl, Uart, UartCtrlGenerics, UartCtrlMemoryMappedConfig}
 import spinal.lib.com.spi._
 import spinal.lib.graphic.RgbConfig
-import spinal.lib.graphic.vga.{Axi4VgaCtrl, Axi4VgaCtrlGenerics, Vga}
 import spinal.lib.io.TriStateArray
 import spinal.lib.memory.sdram.SdramGeneration.SDR
 import spinal.lib.memory.sdram._
@@ -49,23 +48,21 @@ import spinal.lib.system.debugger.{JtagAxi4SharedDebugger, JtagBridge, SystemDeb
 import scala.collection.mutable.ArrayBuffer
 
 
-case class VRV153Config(
+case class VRV123Config(
   axiFrequency : HertzNumber,
   onChipRamSize : BigInt,
   sdramLayout: SdramLayout,
   sdramTimings: SdramTimings,
   cpuPlugins : ArrayBuffer[Plugin[VexRiscv]],
   uart1CtrlConfig : UartCtrlMemoryMappedConfig,
-  uart2CtrlConfig : UartCtrlMemoryMappedConfig,
-  spim1CtrlConfig : SpiMasterCtrlMemoryMappedConfig,
-  spim2CtrlConfig : SpiMasterCtrlMemoryMappedConfig
+  spim1CtrlConfig : SpiMasterCtrlMemoryMappedConfig
 )
 
-object VRV153Config
+object VRV123Config
 {
   def default =
   {
-    val config = VRV153Config(
+    val config = VRV123Config(
       axiFrequency = 100 MHz,
       onChipRamSize  = 16 kB,
       sdramLayout = W9825G6JH6.layout,
@@ -81,27 +78,7 @@ object VRV153Config
         txFifoDepth = 1024,
         rxFifoDepth = 1024
       ),
-      uart2CtrlConfig = UartCtrlMemoryMappedConfig(
-        uartCtrlConfig = UartCtrlGenerics(
-          dataWidthMax      = 8,
-          clockDividerWidth = 20,
-          preSamplingSize   = 1,
-          samplingSize      = 5,
-          postSamplingSize  = 2
-        ),
-        txFifoDepth = 1024,
-        rxFifoDepth = 1024
-      ),
       spim1CtrlConfig = SpiMasterCtrlMemoryMappedConfig(
-        ctrlGenerics = SpiMasterCtrlGenerics(
-          ssWidth			    = 4,
-          timerWidth        = 16,
-          dataWidth         = 8
-        ),
-        cmdFifoDepth = 512,
-        rspFifoDepth = 512
-      ),
-      spim2CtrlConfig = SpiMasterCtrlMemoryMappedConfig(
         ctrlGenerics = SpiMasterCtrlGenerics(
           ssWidth			    = 4,
           timerWidth        = 16,
@@ -207,25 +184,23 @@ object VRV153Config
   }
 }
 
-class VRV153(config: VRV153Config) extends Component
+class VRV123(config: VRV123Config) extends Component
 {
   //Legacy constructor
   def this(axiFrequency: HertzNumber)
   {
-    this(VRV153Config.default.copy(axiFrequency = axiFrequency))
+    this(VRV123Config.default.copy(axiFrequency = axiFrequency))
   }
 
   import config._
   val debug = true
   val interruptCount = 4
-  def vgaRgbConfig = RgbConfig(5,6,5)
 
   val io = new Bundle
   {
     //Clocks / reset
     val asyncReset = in Bool()
     val axiClk     = in Bool()
-    val vgaClk     = in Bool()
 
     //Main components IO
     val jtag       = slave(Jtag())
@@ -233,13 +208,8 @@ class VRV153(config: VRV153Config) extends Component
 
     //Peripherals IO
     val gpioA         = master(TriStateArray(32 bits))
-    val gpioB         = master(TriStateArray(32 bits))
     val uart1         = master(Uart())
-    val uart2         = master(Uart())
     val spim1         = master(SpiMaster(spim1CtrlConfig.ctrlGenerics.ssWidth))
-    val spim2         = master(SpiMaster(spim2CtrlConfig.ctrlGenerics.ssWidth))
-
-    val vga           = master(Vga(vgaRgbConfig))
 
     val timerExternal = in(PinsecTimerCtrlExternal())
     val coreInterrupt = in Bool()
@@ -276,7 +246,6 @@ class VRV153(config: VRV153Config) extends Component
     //Create all reset used later in the design
     val systemReset  = RegNext(systemResetUnbuffered)
     val axiReset     = RegNext(systemResetUnbuffered)
-    val vgaReset     = BufferCC(axiReset)
   }
 
   val axiClockDomain = ClockDomain(
@@ -289,11 +258,6 @@ class VRV153(config: VRV153Config) extends Component
     clock = io.axiClk,
     reset = resetCtrl.systemReset,
     frequency = FixedFrequency(axiFrequency)
-  )
-
-  val vgaClockDomain = ClockDomain(
-    clock = io.vgaClk,
-    reset = resetCtrl.vgaReset
   )
 
   val axi = new ClockingArea(axiClockDomain) {
@@ -334,29 +298,12 @@ class VRV153(config: VRV153Config) extends Component
       gpioWidth = 32,
       withReadSync = true
     )
-    val gpioBCtrl = Apb3GpioSetClear(
-      gpioWidth = 32,
-      withReadSync = true
-    )
 
     val timerCtrl = PinsecTimerCtrl()
 
-    val vgaCtrlConfig = Axi4VgaCtrlGenerics(
-      axiAddressWidth = 32,
-      axiDataWidth    = 32,
-      burstLength     = 8,
-      frameSizeMax    = 2048*1512*2,
-      fifoSize        = 512,
-      rgbConfig       = vgaRgbConfig,
-      vgaClock        = vgaClockDomain
-    )
-    val vgaCtrl = Axi4VgaCtrl(vgaCtrlConfig)
-
     val uart1Ctrl = Apb3UartCtrl(uart1CtrlConfig)
-    val uart2Ctrl = Apb3UartCtrl(uart2CtrlConfig)
 
     val spim1Ctrl = Apb3SpiMasterCtrl(spim1CtrlConfig)
-    val spim2Ctrl = Apb3SpiMasterCtrl(spim2CtrlConfig)
 
     val core = new Area
 	 {
@@ -400,8 +347,7 @@ class VRV153(config: VRV153Config) extends Component
 
     axiCrossbar.addConnections(
       core.iBus       -> List( bootrom.io.axi, ram.io.axi, sdramCtrl.io.axi),
-      core.dBus       -> List( bootrom.io.axi, ram.io.axi, sdramCtrl.io.axi, apbBridge.io.axi, apbBridge2.io.axi ),
-      vgaCtrl.io.axi  -> List( sdramCtrl.io.axi)
+      core.dBus       -> List( bootrom.io.axi, ram.io.axi, sdramCtrl.io.axi, apbBridge.io.axi, apbBridge2.io.axi )
     )
 
 
@@ -440,11 +386,6 @@ class VRV153(config: VRV153Config) extends Component
       crossbar.readRsp               <<  ctrl.readRsp
     })
 
-    axiCrossbar.addPipelining(vgaCtrl.io.axi)((ctrl,crossbar) => {
-      ctrl.readCmd.halfPipe()    >>  crossbar.readCmd
-      ctrl.readRsp               <<  crossbar.readRsp
-    })
-
     axiCrossbar.addPipelining(core.dBus)((cpu,crossbar) => {
       cpu.sharedCmd             >>  crossbar.sharedCmd
       cpu.writeData             >>  crossbar.writeData
@@ -461,41 +402,33 @@ class VRV153(config: VRV153Config) extends Component
       slaves = List
 	   (
         gpioACtrl.io.apb  -> (0x00000, 4 kB),
-        gpioBCtrl.io.apb  -> (0x01000, 4 kB),
         uart1Ctrl.io.apb  -> (0x10000, 4 kB),
-        uart2Ctrl.io.apb  -> (0x11000, 4 kB),
         timerCtrl.io.apb  -> (0x20000, 4 kB),
-        vgaCtrl.io.apb    -> (0x30000, 4 kB),
-        spim1Ctrl.io.apb  -> (0x40000, 4 kB),
-        spim2Ctrl.io.apb  -> (0x41000, 4 kB)
+        spim1Ctrl.io.apb  -> (0x40000, 4 kB)
       )
     )
   }
 
   io.sdram          <> axi.sdramCtrl.io.sdram
-  io.vga            <> axi.vgaCtrl.io.vga
 
   io.gpioA          <> axi.gpioACtrl.io.gpio
-  io.gpioB          <> axi.gpioBCtrl.io.gpio
   io.timerExternal  <> axi.timerCtrl.io.external
   io.uart1          <> axi.uart1Ctrl.io.uart
-  io.uart2          <> axi.uart2Ctrl.io.uart
   io.spim1          <> axi.spim1Ctrl.io.spi
-  io.spim2          <> axi.spim2Ctrl.io.spi
 
   io.apb2           <> axi.apbBridge2.io.apb
 }
 
 // Cyclone IV Starter Kit
-object VRV153
+object VRV123
 {
   def main(args: Array[String])
   {
     val config = SpinalConfig()
     config.generateVerilog(
 	 {
-      val toplevel = new VRV153(VRV153Config.default)
-      HexTools.initRam(toplevel.axi.bootrom.ram, "VRV153_1M.hex", 0x80000000l)
+      val toplevel = new VRV123(VRV123Config.default)
+      HexTools.initRam(toplevel.axi.bootrom.ram, "VRV123_1M.hex", 0x80000000l)
       toplevel
     })
   }
