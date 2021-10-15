@@ -1,5 +1,5 @@
 /************************************
-VRV104 SoC:
+VRV1_104 SoC:
 -----------
 VexRiscV CPU Core (I32M):
  - I32 with the following extensions: Mul-Div (M)
@@ -47,7 +47,7 @@ import spinal.lib.system.debugger.{JtagAxi4SharedDebugger, JtagBridge, SystemDeb
 import scala.collection.mutable.ArrayBuffer
 
 
-case class VRV104Config(
+case class VRV1_104Config(
   coreFrequency      : HertzNumber,
   onChipRamSize      : BigInt,
   pipelineDBus       : Boolean,
@@ -59,11 +59,11 @@ case class VRV104Config(
   spim1CtrlConfig : SpiMasterCtrlMemoryMappedConfig
 )
 
-object VRV104Config
+object VRV1_104Config
 {
   def default =
   {
-    val config = VRV104Config(
+    val config = VRV1_104Config(
       coreFrequency = 100 MHz,
       onChipRamSize  = 32 kB,
 	   hardwareBreakpointCount = 0,
@@ -96,16 +96,15 @@ object VRV104Config
 
         new IBusSimplePlugin(
           resetVector = 0x80000000l,
-          cmdForkOnSecondStage = true,
+          cmdForkOnSecondStage = false,
           cmdForkPersistence = false,
-          prediction = NONE,
+          prediction = STATIC,
           catchAccessFault = true,
           compressedGen = false
         ),
         new DBusSimplePlugin(
           catchAddressMisaligned = false,
-          catchAccessFault = false,
-          earlyInjection = false
+          catchAccessFault = false
         ),
 
         new DecoderSimplePlugin(
@@ -166,7 +165,7 @@ object VRV104Config
   }
 }
 
-class VRV104(config: VRV104Config) extends Component
+class VRV1_104(config: VRV1_104Config) extends Component
 {
   import config._
 
@@ -281,7 +280,7 @@ class VRV104(config: VRV104Config) extends Component
 
     val bootrom = new MuraxPipelinedMemoryBusRam(
       onChipRamSize = 4 kB,
-      onChipRamHexFile = "VRV104_1M.hex",
+      onChipRamHexFile = "VRV1_104_1M.hex",
       pipelinedMemoryBusConfig = pipelinedMemoryBusConfig,
       bigEndian = bigEndianDBus
     )
@@ -319,7 +318,7 @@ class VRV104(config: VRV104Config) extends Component
 
     val gpioACtrl = Apb3GpioSetClear(
       gpioWidth = 32,
-      withReadSync = true
+      withReadSync = false
     )
 
     val uart1Ctrl = Apb3UartCtrl(uart1CtrlConfig)
@@ -357,15 +356,15 @@ class VRV104(config: VRV104Config) extends Component
 }
 
 // Cyclone IV Starter Kit
-object VRV104
+object VRV1_104
 {
   def main(args: Array[String])
   {
     val config = SpinalConfig()
     config.generateVerilog(
 	 {
-      val toplevel = new VRV104(VRV104Config.default)
-      //HexTools.initRam(toplevel.axi.bootrom.ram, "VRV104_1M.hex", 0x80000000l)
+      val toplevel = new VRV1_104(VRV1_104Config.default)
+      HexTools.initRam(toplevel.axi.bootrom.ram, "VRV1_104_1M.hex", 0x80000000l)
       toplevel
     })
   }

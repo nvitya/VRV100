@@ -1,5 +1,5 @@
 // Generator : SpinalHDL v1.6.0    git head : 73c8d8e2b86b45646e9d0b2e729291f2b65e6be3
-// Component : VRV104
+// Component : VRV1_103
 // Git hash  : 68e704f3092be640aa92c876cf78702a83167f94
 
 
@@ -87,7 +87,7 @@
 `define SpiMasterCtrlCmdMode_binary_sequential_SS 1'b1
 
 
-module VRV104 (
+module VRV1_103 (
   input               io_asyncReset,
   input               io_mainClk,
   input               io_jtag_tms,
@@ -117,8 +117,7 @@ module VRV104 (
 );
   wire       [7:0]    system_cpu_debug_bus_cmd_payload_address;
   wire                system_cpu_dBus_cmd_ready;
-  reg                 system_bootrom_io_bus_cmd_valid;
-  reg                 system_ram_io_bus_cmd_valid;
+  reg                 system_ocram_io_bus_cmd_valid;
   reg                 system_apbBridge_io_pipelinedMemoryBus_cmd_valid;
   reg                 system_apbBridge2_io_pipelinedMemoryBus_cmd_valid;
   wire       [4:0]    system_gpioACtrl_io_apb_PADDR;
@@ -163,12 +162,9 @@ module VRV104 (
   wire       [31:0]   systemDebugger_1_io_mem_cmd_payload_data;
   wire                systemDebugger_1_io_mem_cmd_payload_wr;
   wire       [1:0]    systemDebugger_1_io_mem_cmd_payload_size;
-  wire                system_bootrom_io_bus_cmd_ready;
-  wire                system_bootrom_io_bus_rsp_valid;
-  wire       [31:0]   system_bootrom_io_bus_rsp_payload_data;
-  wire                system_ram_io_bus_cmd_ready;
-  wire                system_ram_io_bus_rsp_valid;
-  wire       [31:0]   system_ram_io_bus_rsp_payload_data;
+  wire                system_ocram_io_bus_cmd_ready;
+  wire                system_ocram_io_bus_rsp_valid;
+  wire       [31:0]   system_ocram_io_bus_rsp_payload_data;
   wire                system_apbBridge_io_pipelinedMemoryBus_cmd_ready;
   wire                system_apbBridge_io_pipelinedMemoryBus_rsp_valid;
   wire       [31:0]   system_apbBridge_io_pipelinedMemoryBus_rsp_payload_data;
@@ -239,9 +235,9 @@ module VRV104 (
   reg        [31:0]   _zz_system_mainBusDecoder_logic_masterPipelined_rsp_payload_data;
   reg                 resetCtrl_mainClkResetUnbuffered;
   reg        [5:0]    resetCtrl_systemClkResetCounter = 6'h0;
-  wire       [5:0]    _zz_when_VRV104_l208;
-  wire                when_VRV104_l208;
-  wire                when_VRV104_l212;
+  wire       [5:0]    _zz_when_VRV1_103_l207;
+  wire                when_VRV1_103_l207;
+  wire                when_VRV1_103_l211;
   reg                 resetCtrl_mainClkReset;
   reg                 resetCtrl_systemReset;
   wire                system_timerInterrupt;
@@ -272,18 +268,14 @@ module VRV104 (
   wire                system_mainBusDecoder_logic_hits_0;
   wire                _zz_io_bus_cmd_payload_write;
   wire                system_mainBusDecoder_logic_hits_1;
-  wire                _zz_io_bus_cmd_payload_write_1;
-  wire                system_mainBusDecoder_logic_hits_2;
   wire                _zz_io_pipelinedMemoryBus_cmd_payload_write;
-  wire                system_mainBusDecoder_logic_hits_3;
+  wire                system_mainBusDecoder_logic_hits_2;
   wire                _zz_io_pipelinedMemoryBus_cmd_payload_write_1;
   wire                system_mainBusDecoder_logic_noHit;
   reg                 system_mainBusDecoder_logic_rspPending;
   wire                system_mainBusDecoder_logic_masterPipelined_cmd_fire;
   wire                when_MuraxUtiles_l127;
   reg                 system_mainBusDecoder_logic_rspNoHit;
-  wire                _zz_system_mainBusDecoder_logic_rspSourceId;
-  wire                _zz_system_mainBusDecoder_logic_rspSourceId_1;
   wire                system_mainBusDecoder_logic_masterPipelined_cmd_fire_1;
   reg        [1:0]    system_mainBusDecoder_logic_rspSourceId;
   wire                when_MuraxUtiles_l133;
@@ -386,27 +378,15 @@ module VRV104 (
     .io_mainClk                        (io_mainClk                                    ), //i
     .resetCtrl_mainClkReset            (resetCtrl_mainClkReset                        )  //i
   );
-  MuraxPipelinedMemoryBusRam system_bootrom (
-    .io_bus_cmd_valid              (system_bootrom_io_bus_cmd_valid                                  ), //i
-    .io_bus_cmd_ready              (system_bootrom_io_bus_cmd_ready                                  ), //o
+  MuraxPipelinedMemoryBusRam system_ocram (
+    .io_bus_cmd_valid              (system_ocram_io_bus_cmd_valid                                    ), //i
+    .io_bus_cmd_ready              (system_ocram_io_bus_cmd_ready                                    ), //o
     .io_bus_cmd_payload_write      (_zz_io_bus_cmd_payload_write                                     ), //i
     .io_bus_cmd_payload_address    (system_mainBusDecoder_logic_masterPipelined_cmd_payload_address  ), //i
     .io_bus_cmd_payload_data       (system_mainBusDecoder_logic_masterPipelined_cmd_payload_data     ), //i
     .io_bus_cmd_payload_mask       (system_mainBusDecoder_logic_masterPipelined_cmd_payload_mask     ), //i
-    .io_bus_rsp_valid              (system_bootrom_io_bus_rsp_valid                                  ), //o
-    .io_bus_rsp_payload_data       (system_bootrom_io_bus_rsp_payload_data                           ), //o
-    .io_mainClk                    (io_mainClk                                                       ), //i
-    .resetCtrl_systemReset         (resetCtrl_systemReset                                            )  //i
-  );
-  MuraxPipelinedMemoryBusRam_1 system_ram (
-    .io_bus_cmd_valid              (system_ram_io_bus_cmd_valid                                      ), //i
-    .io_bus_cmd_ready              (system_ram_io_bus_cmd_ready                                      ), //o
-    .io_bus_cmd_payload_write      (_zz_io_bus_cmd_payload_write_1                                   ), //i
-    .io_bus_cmd_payload_address    (system_mainBusDecoder_logic_masterPipelined_cmd_payload_address  ), //i
-    .io_bus_cmd_payload_data       (system_mainBusDecoder_logic_masterPipelined_cmd_payload_data     ), //i
-    .io_bus_cmd_payload_mask       (system_mainBusDecoder_logic_masterPipelined_cmd_payload_mask     ), //i
-    .io_bus_rsp_valid              (system_ram_io_bus_rsp_valid                                      ), //o
-    .io_bus_rsp_payload_data       (system_ram_io_bus_rsp_payload_data                               ), //o
+    .io_bus_rsp_valid              (system_ocram_io_bus_rsp_valid                                    ), //o
+    .io_bus_rsp_payload_data       (system_ocram_io_bus_rsp_payload_data                             ), //o
     .io_mainClk                    (io_mainClk                                                       ), //i
     .resetCtrl_systemReset         (resetCtrl_systemReset                                            )  //i
   );
@@ -576,12 +556,9 @@ module VRV104 (
   always @(*) begin
     case(system_mainBusDecoder_logic_rspSourceId)
       2'b00 : begin
-        _zz_system_mainBusDecoder_logic_masterPipelined_rsp_payload_data = system_bootrom_io_bus_rsp_payload_data;
+        _zz_system_mainBusDecoder_logic_masterPipelined_rsp_payload_data = system_ocram_io_bus_rsp_payload_data;
       end
       2'b01 : begin
-        _zz_system_mainBusDecoder_logic_masterPipelined_rsp_payload_data = system_ram_io_bus_rsp_payload_data;
-      end
-      2'b10 : begin
         _zz_system_mainBusDecoder_logic_masterPipelined_rsp_payload_data = system_apbBridge_io_pipelinedMemoryBus_rsp_payload_data;
       end
       default : begin
@@ -592,14 +569,14 @@ module VRV104 (
 
   always @(*) begin
     resetCtrl_mainClkResetUnbuffered = 1'b0;
-    if(when_VRV104_l208) begin
+    if(when_VRV1_103_l207) begin
       resetCtrl_mainClkResetUnbuffered = 1'b1;
     end
   end
 
-  assign _zz_when_VRV104_l208[5 : 0] = 6'h3f;
-  assign when_VRV104_l208 = (resetCtrl_systemClkResetCounter != _zz_when_VRV104_l208);
-  assign when_VRV104_l212 = io_asyncReset_buffercc_io_dataOut;
+  assign _zz_when_VRV1_103_l207[5 : 0] = 6'h3f;
+  assign when_VRV1_103_l207 = (resetCtrl_systemClkResetCounter != _zz_when_VRV1_103_l207);
+  assign when_VRV1_103_l211 = io_asyncReset_buffercc_io_dataOut;
   assign system_timerInterrupt = 1'b0;
   assign system_externalInterrupt = 1'b0;
   assign system_cpu_dBus_cmd_halfPipe_fire = (system_cpu_dBus_cmd_halfPipe_valid && system_cpu_dBus_cmd_halfPipe_ready);
@@ -622,45 +599,36 @@ module VRV104 (
   assign system_mainBusDecoder_logic_masterPipelined_cmd_payload_address = system_mainBusArbiter_io_masterBus_cmd_payload_address;
   assign system_mainBusDecoder_logic_masterPipelined_cmd_payload_data = system_mainBusArbiter_io_masterBus_cmd_payload_data;
   assign system_mainBusDecoder_logic_masterPipelined_cmd_payload_mask = system_mainBusArbiter_io_masterBus_cmd_payload_mask;
-  assign system_mainBusDecoder_logic_hits_0 = ((system_mainBusDecoder_logic_masterPipelined_cmd_payload_address & (~ 32'h00000fff)) == 32'h80000000);
+  assign system_mainBusDecoder_logic_hits_0 = ((system_mainBusDecoder_logic_masterPipelined_cmd_payload_address & (~ 32'h00003fff)) == 32'h80000000);
   always @(*) begin
-    system_bootrom_io_bus_cmd_valid = (system_mainBusDecoder_logic_masterPipelined_cmd_valid && system_mainBusDecoder_logic_hits_0);
+    system_ocram_io_bus_cmd_valid = (system_mainBusDecoder_logic_masterPipelined_cmd_valid && system_mainBusDecoder_logic_hits_0);
     if(when_MuraxUtiles_l133) begin
-      system_bootrom_io_bus_cmd_valid = 1'b0;
+      system_ocram_io_bus_cmd_valid = 1'b0;
     end
   end
 
   assign _zz_io_bus_cmd_payload_write = system_mainBusDecoder_logic_masterPipelined_cmd_payload_write;
-  assign system_mainBusDecoder_logic_hits_1 = ((system_mainBusDecoder_logic_masterPipelined_cmd_payload_address & (~ 32'h00007fff)) == 32'h10000000);
+  assign system_mainBusDecoder_logic_hits_1 = ((system_mainBusDecoder_logic_masterPipelined_cmd_payload_address & (~ 32'h000fffff)) == 32'hf0000000);
   always @(*) begin
-    system_ram_io_bus_cmd_valid = (system_mainBusDecoder_logic_masterPipelined_cmd_valid && system_mainBusDecoder_logic_hits_1);
-    if(when_MuraxUtiles_l133) begin
-      system_ram_io_bus_cmd_valid = 1'b0;
-    end
-  end
-
-  assign _zz_io_bus_cmd_payload_write_1 = system_mainBusDecoder_logic_masterPipelined_cmd_payload_write;
-  assign system_mainBusDecoder_logic_hits_2 = ((system_mainBusDecoder_logic_masterPipelined_cmd_payload_address & (~ 32'h000fffff)) == 32'hf0000000);
-  always @(*) begin
-    system_apbBridge_io_pipelinedMemoryBus_cmd_valid = (system_mainBusDecoder_logic_masterPipelined_cmd_valid && system_mainBusDecoder_logic_hits_2);
+    system_apbBridge_io_pipelinedMemoryBus_cmd_valid = (system_mainBusDecoder_logic_masterPipelined_cmd_valid && system_mainBusDecoder_logic_hits_1);
     if(when_MuraxUtiles_l133) begin
       system_apbBridge_io_pipelinedMemoryBus_cmd_valid = 1'b0;
     end
   end
 
   assign _zz_io_pipelinedMemoryBus_cmd_payload_write = system_mainBusDecoder_logic_masterPipelined_cmd_payload_write;
-  assign system_mainBusDecoder_logic_hits_3 = ((system_mainBusDecoder_logic_masterPipelined_cmd_payload_address & (~ 32'h000fffff)) == 32'hf1000000);
+  assign system_mainBusDecoder_logic_hits_2 = ((system_mainBusDecoder_logic_masterPipelined_cmd_payload_address & (~ 32'h000fffff)) == 32'hf1000000);
   always @(*) begin
-    system_apbBridge2_io_pipelinedMemoryBus_cmd_valid = (system_mainBusDecoder_logic_masterPipelined_cmd_valid && system_mainBusDecoder_logic_hits_3);
+    system_apbBridge2_io_pipelinedMemoryBus_cmd_valid = (system_mainBusDecoder_logic_masterPipelined_cmd_valid && system_mainBusDecoder_logic_hits_2);
     if(when_MuraxUtiles_l133) begin
       system_apbBridge2_io_pipelinedMemoryBus_cmd_valid = 1'b0;
     end
   end
 
   assign _zz_io_pipelinedMemoryBus_cmd_payload_write_1 = system_mainBusDecoder_logic_masterPipelined_cmd_payload_write;
-  assign system_mainBusDecoder_logic_noHit = (! ({system_mainBusDecoder_logic_hits_3,{system_mainBusDecoder_logic_hits_2,{system_mainBusDecoder_logic_hits_1,system_mainBusDecoder_logic_hits_0}}} != 4'b0000));
+  assign system_mainBusDecoder_logic_noHit = (! ({system_mainBusDecoder_logic_hits_2,{system_mainBusDecoder_logic_hits_1,system_mainBusDecoder_logic_hits_0}} != 3'b000));
   always @(*) begin
-    system_mainBusDecoder_logic_masterPipelined_cmd_ready = (({(system_mainBusDecoder_logic_hits_3 && system_apbBridge2_io_pipelinedMemoryBus_cmd_ready),{(system_mainBusDecoder_logic_hits_2 && system_apbBridge_io_pipelinedMemoryBus_cmd_ready),{(system_mainBusDecoder_logic_hits_1 && system_ram_io_bus_cmd_ready),(system_mainBusDecoder_logic_hits_0 && system_bootrom_io_bus_cmd_ready)}}} != 4'b0000) || system_mainBusDecoder_logic_noHit);
+    system_mainBusDecoder_logic_masterPipelined_cmd_ready = (({(system_mainBusDecoder_logic_hits_2 && system_apbBridge2_io_pipelinedMemoryBus_cmd_ready),{(system_mainBusDecoder_logic_hits_1 && system_apbBridge_io_pipelinedMemoryBus_cmd_ready),(system_mainBusDecoder_logic_hits_0 && system_ocram_io_bus_cmd_ready)}} != 3'b000) || system_mainBusDecoder_logic_noHit);
     if(when_MuraxUtiles_l133) begin
       system_mainBusDecoder_logic_masterPipelined_cmd_ready = 1'b0;
     end
@@ -668,10 +636,8 @@ module VRV104 (
 
   assign system_mainBusDecoder_logic_masterPipelined_cmd_fire = (system_mainBusDecoder_logic_masterPipelined_cmd_valid && system_mainBusDecoder_logic_masterPipelined_cmd_ready);
   assign when_MuraxUtiles_l127 = (system_mainBusDecoder_logic_masterPipelined_cmd_fire && (! system_mainBusDecoder_logic_masterPipelined_cmd_payload_write));
-  assign _zz_system_mainBusDecoder_logic_rspSourceId = (system_mainBusDecoder_logic_hits_1 || system_mainBusDecoder_logic_hits_3);
-  assign _zz_system_mainBusDecoder_logic_rspSourceId_1 = (system_mainBusDecoder_logic_hits_2 || system_mainBusDecoder_logic_hits_3);
   assign system_mainBusDecoder_logic_masterPipelined_cmd_fire_1 = (system_mainBusDecoder_logic_masterPipelined_cmd_valid && system_mainBusDecoder_logic_masterPipelined_cmd_ready);
-  assign system_mainBusDecoder_logic_masterPipelined_rsp_valid = (({system_apbBridge2_io_pipelinedMemoryBus_rsp_valid,{system_apbBridge_io_pipelinedMemoryBus_rsp_valid,{system_ram_io_bus_rsp_valid,system_bootrom_io_bus_rsp_valid}}} != 4'b0000) || (system_mainBusDecoder_logic_rspPending && system_mainBusDecoder_logic_rspNoHit));
+  assign system_mainBusDecoder_logic_masterPipelined_rsp_valid = (({system_apbBridge2_io_pipelinedMemoryBus_rsp_valid,{system_apbBridge_io_pipelinedMemoryBus_rsp_valid,system_ocram_io_bus_rsp_valid}} != 3'b000) || (system_mainBusDecoder_logic_rspPending && system_mainBusDecoder_logic_rspNoHit));
   assign system_mainBusDecoder_logic_masterPipelined_rsp_payload_data = _zz_system_mainBusDecoder_logic_masterPipelined_rsp_payload_data;
   assign when_MuraxUtiles_l133 = (system_mainBusDecoder_logic_rspPending && (! system_mainBusDecoder_logic_masterPipelined_rsp_valid));
   assign io_gpioA_write = system_gpioACtrl_io_gpio_write;
@@ -686,10 +652,10 @@ module VRV104 (
   assign io_apb2_PWRITE = system_apbBridge2_io_apb_PWRITE;
   assign io_apb2_PWDATA = system_apbBridge2_io_apb_PWDATA;
   always @(posedge io_mainClk) begin
-    if(when_VRV104_l208) begin
+    if(when_VRV1_103_l207) begin
       resetCtrl_systemClkResetCounter <= (resetCtrl_systemClkResetCounter + 6'h01);
     end
-    if(when_VRV104_l212) begin
+    if(when_VRV1_103_l211) begin
       resetCtrl_systemClkResetCounter <= 6'h0;
     end
   end
@@ -735,7 +701,7 @@ module VRV104 (
       system_cpu_dBus_cmd_rData_size <= system_cpu_dBus_cmd_payload_size;
     end
     if(system_mainBusDecoder_logic_masterPipelined_cmd_fire_1) begin
-      system_mainBusDecoder_logic_rspSourceId <= {_zz_system_mainBusDecoder_logic_rspSourceId_1,_zz_system_mainBusDecoder_logic_rspSourceId};
+      system_mainBusDecoder_logic_rspSourceId <= {system_mainBusDecoder_logic_hits_2,system_mainBusDecoder_logic_hits_1};
     end
   end
 
@@ -2991,79 +2957,6 @@ module PipelinedMemoryBusToApbBridge (
 
 endmodule
 
-module MuraxPipelinedMemoryBusRam_1 (
-  input               io_bus_cmd_valid,
-  output              io_bus_cmd_ready,
-  input               io_bus_cmd_payload_write,
-  input      [31:0]   io_bus_cmd_payload_address,
-  input      [31:0]   io_bus_cmd_payload_data,
-  input      [3:0]    io_bus_cmd_payload_mask,
-  output              io_bus_rsp_valid,
-  output     [31:0]   io_bus_rsp_payload_data,
-  input               io_mainClk,
-  input               resetCtrl_systemReset
-);
-  reg        [31:0]   _zz_ram_port0;
-  wire       [12:0]   _zz_ram_port;
-  wire       [12:0]   _zz_io_bus_rsp_payload_data_2;
-  wire                io_bus_cmd_fire;
-  reg                 _zz_io_bus_rsp_valid;
-  wire       [29:0]   _zz_io_bus_rsp_payload_data;
-  wire       [31:0]   _zz_io_bus_rsp_payload_data_1;
-  reg [7:0] ram_symbol0 [0:8191];
-  reg [7:0] ram_symbol1 [0:8191];
-  reg [7:0] ram_symbol2 [0:8191];
-  reg [7:0] ram_symbol3 [0:8191];
-  reg [7:0] _zz_ramsymbol_read;
-  reg [7:0] _zz_ramsymbol_read_1;
-  reg [7:0] _zz_ramsymbol_read_2;
-  reg [7:0] _zz_ramsymbol_read_3;
-
-  assign _zz_io_bus_rsp_payload_data_2 = _zz_io_bus_rsp_payload_data[12:0];
-  always @(*) begin
-    _zz_ram_port0 = {_zz_ramsymbol_read_3, _zz_ramsymbol_read_2, _zz_ramsymbol_read_1, _zz_ramsymbol_read};
-  end
-  always @(posedge io_mainClk) begin
-    if(io_bus_cmd_valid) begin
-      _zz_ramsymbol_read <= ram_symbol0[_zz_io_bus_rsp_payload_data_2];
-      _zz_ramsymbol_read_1 <= ram_symbol1[_zz_io_bus_rsp_payload_data_2];
-      _zz_ramsymbol_read_2 <= ram_symbol2[_zz_io_bus_rsp_payload_data_2];
-      _zz_ramsymbol_read_3 <= ram_symbol3[_zz_io_bus_rsp_payload_data_2];
-    end
-  end
-
-  always @(posedge io_mainClk) begin
-    if(io_bus_cmd_payload_mask[0] && io_bus_cmd_valid && io_bus_cmd_payload_write ) begin
-      ram_symbol0[_zz_io_bus_rsp_payload_data_2] <= _zz_io_bus_rsp_payload_data_1[7 : 0];
-    end
-    if(io_bus_cmd_payload_mask[1] && io_bus_cmd_valid && io_bus_cmd_payload_write ) begin
-      ram_symbol1[_zz_io_bus_rsp_payload_data_2] <= _zz_io_bus_rsp_payload_data_1[15 : 8];
-    end
-    if(io_bus_cmd_payload_mask[2] && io_bus_cmd_valid && io_bus_cmd_payload_write ) begin
-      ram_symbol2[_zz_io_bus_rsp_payload_data_2] <= _zz_io_bus_rsp_payload_data_1[23 : 16];
-    end
-    if(io_bus_cmd_payload_mask[3] && io_bus_cmd_valid && io_bus_cmd_payload_write ) begin
-      ram_symbol3[_zz_io_bus_rsp_payload_data_2] <= _zz_io_bus_rsp_payload_data_1[31 : 24];
-    end
-  end
-
-  assign io_bus_cmd_fire = (io_bus_cmd_valid && io_bus_cmd_ready);
-  assign io_bus_rsp_valid = _zz_io_bus_rsp_valid;
-  assign _zz_io_bus_rsp_payload_data = (io_bus_cmd_payload_address >>> 2);
-  assign _zz_io_bus_rsp_payload_data_1 = io_bus_cmd_payload_data;
-  assign io_bus_rsp_payload_data = _zz_ram_port0;
-  assign io_bus_cmd_ready = 1'b1;
-  always @(posedge io_mainClk or posedge resetCtrl_systemReset) begin
-    if(resetCtrl_systemReset) begin
-      _zz_io_bus_rsp_valid <= 1'b0;
-    end else begin
-      _zz_io_bus_rsp_valid <= (io_bus_cmd_fire && (! io_bus_cmd_payload_write));
-    end
-  end
-
-
-endmodule
-
 module MuraxPipelinedMemoryBusRam (
   input               io_bus_cmd_valid,
   output              io_bus_cmd_ready,
@@ -3077,27 +2970,27 @@ module MuraxPipelinedMemoryBusRam (
   input               resetCtrl_systemReset
 );
   reg        [31:0]   _zz_ram_port0;
-  wire       [9:0]    _zz_ram_port;
-  wire       [9:0]    _zz_io_bus_rsp_payload_data_2;
+  wire       [11:0]   _zz_ram_port;
+  wire       [11:0]   _zz_io_bus_rsp_payload_data_2;
   wire                io_bus_cmd_fire;
   reg                 _zz_io_bus_rsp_valid;
   wire       [29:0]   _zz_io_bus_rsp_payload_data;
   wire       [31:0]   _zz_io_bus_rsp_payload_data_1;
-  reg [7:0] ram_symbol0 [0:1023];
-  reg [7:0] ram_symbol1 [0:1023];
-  reg [7:0] ram_symbol2 [0:1023];
-  reg [7:0] ram_symbol3 [0:1023];
+  reg [7:0] ram_symbol0 [0:4095];
+  reg [7:0] ram_symbol1 [0:4095];
+  reg [7:0] ram_symbol2 [0:4095];
+  reg [7:0] ram_symbol3 [0:4095];
   reg [7:0] _zz_ramsymbol_read;
   reg [7:0] _zz_ramsymbol_read_1;
   reg [7:0] _zz_ramsymbol_read_2;
   reg [7:0] _zz_ramsymbol_read_3;
 
-  assign _zz_io_bus_rsp_payload_data_2 = _zz_io_bus_rsp_payload_data[9:0];
+  assign _zz_io_bus_rsp_payload_data_2 = _zz_io_bus_rsp_payload_data[11:0];
   initial begin
-    $readmemb("VRV104.v_toplevel_system_bootrom_ram_symbol0.bin",ram_symbol0);
-    $readmemb("VRV104.v_toplevel_system_bootrom_ram_symbol1.bin",ram_symbol1);
-    $readmemb("VRV104.v_toplevel_system_bootrom_ram_symbol2.bin",ram_symbol2);
-    $readmemb("VRV104.v_toplevel_system_bootrom_ram_symbol3.bin",ram_symbol3);
+    $readmemb("VRV1_103.v_toplevel_system_ocram_ram_symbol0.bin",ram_symbol0);
+    $readmemb("VRV1_103.v_toplevel_system_ocram_ram_symbol1.bin",ram_symbol1);
+    $readmemb("VRV1_103.v_toplevel_system_ocram_ram_symbol2.bin",ram_symbol2);
+    $readmemb("VRV1_103.v_toplevel_system_ocram_ram_symbol3.bin",ram_symbol3);
   end
   always @(*) begin
     _zz_ram_port0 = {_zz_ramsymbol_read_3, _zz_ramsymbol_read_2, _zz_ramsymbol_read_1, _zz_ramsymbol_read};

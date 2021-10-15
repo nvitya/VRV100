@@ -3,7 +3,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity VRV104_test_top is
+entity VRV1_104_test_top is
 port
 (
 	LED 	: out std_logic_vector(0 downto 0);
@@ -31,7 +31,7 @@ port
 );
 end entity;
 
-architecture behavioral of VRV104_test_top
+architecture behavioral of VRV1_104_test_top
 is
 	signal CLKCNT : unsigned(31 downto 0);
 	signal CLK : std_logic;
@@ -71,7 +71,7 @@ begin
 		C1			=> CLK_100_SDRAM
 	);
 
-	u0 : entity work.VRV104_vhdl
+	u0 : entity work.VRV1_104_vhdl
 	port map
 	(
 		GPIOA_IO					=>	GPIOA_IO,

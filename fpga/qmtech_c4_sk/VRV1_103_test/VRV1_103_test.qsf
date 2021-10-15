@@ -181,17 +181,15 @@ set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_RO
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name ENABLE_SIGNALTAP OFF
 
-set_global_assignment -name TOP_LEVEL_ENTITY VRV104_test_top
+set_global_assignment -name TOP_LEVEL_ENTITY VRV1_103_test_top
 set_global_assignment -name VHDL_FILE apb_periph.vhd
-set_global_assignment -name VERILOG_FILE VRV100/VRV104.v
-set_global_assignment -name VHDL_FILE VRV100/VRV104_vhdl.vhd
+set_global_assignment -name VERILOG_FILE VRV100/VRV1_103.v
+set_global_assignment -name VHDL_FILE VRV100/VRV1_103_vhdl.vhd
 set_global_assignment -name QIP_FILE clock_pll.qip
-set_global_assignment -name VHDL_FILE VRV104_test_top.vhd
+set_global_assignment -name VHDL_FILE VRV1_103_test_top.vhd
 set_global_assignment -name VHDL_FILE ../../nvhdutils/generic/generic_functions.vhd
 set_global_assignment -name VHDL_FILE ../../nvhdutils/display/sevenseg_digit.vhd
 set_global_assignment -name VHDL_FILE ../../nvhdutils/display/multidigit_7seg.vhd
-set_global_assignment -name USE_SIGNALTAP_FILE vga_check.stp
-set_global_assignment -name SIGNALTAP_FILE vga_check.stp
 set_global_assignment -name ENABLE_OCT_DONE OFF
 set_global_assignment -name CRC_ERROR_OPEN_DRAIN OFF
 set_global_assignment -name RESERVE_DATA1_AFTER_CONFIGURATION "USE AS REGULAR IO"
