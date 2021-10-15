@@ -1,0 +1,198 @@
+# -------------------------------------------------------------------------- #
+#
+# Copyright (C) 2018  Intel Corporation. All rights reserved.
+# Your use of Intel Corporation's design tools, logic functions
+# and other software and tools, and its AMPP partner logic
+# functions, and any output files from any of the foregoing
+# (including device programming or simulation files), and any
+# associated documentation or information are expressly subject
+# to the terms and conditions of the Intel Program License
+# Subscription Agreement, the Intel Quartus Prime License Agreement,
+# the Intel FPGA IP License Agreement, or other applicable license
+# agreement, including, without limitation, that your use is for
+# the sole purpose of programming logic devices manufactured by
+# Intel and sold by Intel or its authorized distributors.  Please
+# refer to the applicable agreement for further details.
+#
+# -------------------------------------------------------------------------- #
+#
+# Quartus Prime
+# Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
+# Date created = 18:53:59  August 12, 2021
+#
+# -------------------------------------------------------------------------- #
+#
+# Notes:
+#
+# 1) The default values for assignments are stored in the file:
+#		ce15_vexrv_assignment_defaults.qdf
+#    If this file doesn't exist, see file:
+#		assignment_defaults.qdf
+#
+# 2) Altera recommends that you do not modify this file. This
+#    file is updated automatically by the Quartus Prime software
+#    and any changes you make may be lost or overwritten.
+#
+# -------------------------------------------------------------------------- #
+
+
+set_global_assignment -name FAMILY "Cyclone IV E"
+set_global_assignment -name DEVICE EP4CE15F23C8
+set_global_assignment -name ORIGINAL_QUARTUS_VERSION 18.1.0
+set_global_assignment -name PROJECT_CREATION_TIME_DATE "18:53:59  AUGUST 12, 2021"
+set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Lite Edition"
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
+set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 1
+set_global_assignment -name NOMINAL_CORE_SUPPLY_VOLTAGE 1.2V
+
+set_global_assignment -name OPTIMIZATION_TECHNIQUE SPEED
+set_global_assignment -name SYNTH_TIMING_DRIVEN_SYNTHESIS ON
+set_global_assignment -name OPTIMIZE_HOLD_TIMING "ALL PATHS"
+set_global_assignment -name OPTIMIZE_MULTI_CORNER_TIMING ON
+set_global_assignment -name FITTER_EFFORT "STANDARD FIT"
+
+set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -rise
+set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -fall
+set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -rise
+set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -fall
+
+set_global_assignment -name USE_CONFIGURATION_DEVICE OFF
+set_global_assignment -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name RESERVE_DATA0_AFTER_CONFIGURATION "USE AS REGULAR IO"
+
+set_global_assignment -name FMAX_REQUIREMENT "100 MHz" -section_id CLK_100
+set_global_assignment -name FMAX_REQUIREMENT "100 MHz" -section_id CLK_100_SDRAM
+
+set_global_assignment -name ALLOW_ANY_RAM_SIZE_FOR_RECOGNITION ON
+
+set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "3.3-V LVTTL"
+
+set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
+set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+
+set_location_assignment PIN_T2 -to CLKIN_50
+set_location_assignment PIN_J4 -to RESET_N
+set_location_assignment PIN_E3 -to LED
+
+# CP2102 TX:
+set_location_assignment PIN_Y21 -to UART0_RXD_I
+# CP2102 RX:
+set_location_assignment PIN_Y22 -to UART0_TXD_O
+
+# SPI FLASH
+set_location_assignment PIN_E2 -to SPIM1_SS
+set_location_assignment PIN_K2 -to SPIM1_SCLK
+set_location_assignment PIN_D1 -to SPIM1_MOSI
+set_location_assignment PIN_K1 -to SPIM1_MISO
+
+# VGA
+
+set_location_assignment PIN_AB10 -to VGA_VSYNC
+set_location_assignment PIN_AA13 -to VGA_HSYNC
+
+set_location_assignment PIN_AB19 -to VGA_COLOR_R[4]
+set_location_assignment PIN_AA19 -to VGA_COLOR_R[3]
+set_location_assignment PIN_AB20 -to VGA_COLOR_R[2]
+set_location_assignment PIN_AA20 -to VGA_COLOR_R[1]
+set_location_assignment PIN_AA21 -to VGA_COLOR_R[0]
+
+set_location_assignment PIN_AB16 -to VGA_COLOR_G[5]
+set_location_assignment PIN_AA16 -to VGA_COLOR_G[4]
+set_location_assignment PIN_AB17 -to VGA_COLOR_G[3]
+set_location_assignment PIN_AA17 -to VGA_COLOR_G[2]
+set_location_assignment PIN_AA18 -to VGA_COLOR_G[1]
+set_location_assignment PIN_AB18 -to VGA_COLOR_G[0]
+
+set_location_assignment PIN_AA14 -to VGA_COLOR_B[4]
+set_location_assignment PIN_AB13 -to VGA_COLOR_B[3]
+set_location_assignment PIN_AA15 -to VGA_COLOR_B[2]
+set_location_assignment PIN_AB14 -to VGA_COLOR_B[1]
+set_location_assignment PIN_AB15 -to VGA_COLOR_B[0]
+
+
+# SDRAM
+set_location_assignment PIN_AA3 -to SDRAM_CS
+set_location_assignment PIN_Y6 -to SDRAM_CLK
+set_location_assignment PIN_W6 -to SDRAM_CKE
+set_location_assignment PIN_AA4 -to SDRAM_CAS
+set_location_assignment PIN_AB3 -to SDRAM_RAS
+set_location_assignment PIN_AB4 -to SDRAM_WE
+
+set_location_assignment PIN_AA5 -to SDRAM_DQM[0]
+set_location_assignment PIN_W7 -to SDRAM_DQM[1]
+
+set_location_assignment PIN_AA10 -to SDRAM_DQ[0]
+set_location_assignment PIN_AB9 -to SDRAM_DQ[1]
+set_location_assignment PIN_AA9 -to SDRAM_DQ[2]
+set_location_assignment PIN_AB8 -to SDRAM_DQ[3]
+set_location_assignment PIN_AA8 -to SDRAM_DQ[4]
+set_location_assignment PIN_AB7 -to SDRAM_DQ[5]
+set_location_assignment PIN_AA7 -to SDRAM_DQ[6]
+set_location_assignment PIN_AB5 -to SDRAM_DQ[7]
+set_location_assignment PIN_Y7 -to SDRAM_DQ[8]
+set_location_assignment PIN_W8 -to SDRAM_DQ[9]
+set_location_assignment PIN_Y8 -to SDRAM_DQ[10]
+set_location_assignment PIN_V9 -to SDRAM_DQ[11]
+set_location_assignment PIN_V10 -to SDRAM_DQ[12]
+set_location_assignment PIN_Y10 -to SDRAM_DQ[13]
+set_location_assignment PIN_W10 -to SDRAM_DQ[14]
+set_location_assignment PIN_V11 -to SDRAM_DQ[15]
+
+set_location_assignment PIN_Y1 -to SDRAM_BA[0]
+set_location_assignment PIN_W2 -to SDRAM_BA[1]
+
+set_location_assignment PIN_V2 -to SDRAM_ADDR[0]
+set_location_assignment PIN_V1 -to SDRAM_ADDR[1]
+set_location_assignment PIN_U2 -to SDRAM_ADDR[2]
+set_location_assignment PIN_U1 -to SDRAM_ADDR[3]
+set_location_assignment PIN_V3 -to SDRAM_ADDR[4]
+set_location_assignment PIN_V4 -to SDRAM_ADDR[5]
+set_location_assignment PIN_Y2 -to SDRAM_ADDR[6]
+set_location_assignment PIN_AA1 -to SDRAM_ADDR[7]
+set_location_assignment PIN_Y3 -to SDRAM_ADDR[8]
+set_location_assignment PIN_V5 -to SDRAM_ADDR[9]
+set_location_assignment PIN_W1 -to SDRAM_ADDR[10]
+set_location_assignment PIN_Y4 -to SDRAM_ADDR[11]
+set_location_assignment PIN_V6 -to SDRAM_ADDR[12]
+
+
+# RISCV debug interface:
+set_location_assignment PIN_M1 -to JTAG_TDI
+set_location_assignment PIN_N1 -to JTAG_TMS
+set_location_assignment PIN_P1 -to JTAG_TCK
+set_location_assignment PIN_R1 -to JTAG_TDO
+
+set_location_assignment PIN_W19 -to D7S_SEGMENT[7]
+set_location_assignment PIN_U19 -to D7S_SEGMENT[6]
+set_location_assignment PIN_W17 -to D7S_SEGMENT[5]
+set_location_assignment PIN_W15 -to D7S_SEGMENT[4]
+set_location_assignment PIN_Y17 -to D7S_SEGMENT[3]
+set_location_assignment PIN_W20 -to D7S_SEGMENT[2]
+set_location_assignment PIN_U20 -to D7S_SEGMENT[1]
+set_location_assignment PIN_V15 -to D7S_SEGMENT[0]
+set_location_assignment PIN_Y13 -to D7S_SEL[2]
+set_location_assignment PIN_W13 -to D7S_SEL[1]
+set_location_assignment PIN_V13 -to D7S_SEL[0]
+
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name ENABLE_SIGNALTAP OFF
+
+set_global_assignment -name TOP_LEVEL_ENTITY VRV1_441_test_top
+set_global_assignment -name VHDL_FILE apb_periph.vhd
+set_global_assignment -name VERILOG_FILE VRV100/VRV1_441.v
+set_global_assignment -name VHDL_FILE VRV100/VRV1_441_vhdl.vhd
+set_global_assignment -name QIP_FILE clock_pll.qip
+set_global_assignment -name VHDL_FILE VRV1_441_test_top.vhd
+set_global_assignment -name VHDL_FILE ../../nvhdutils/generic/generic_functions.vhd
+set_global_assignment -name VHDL_FILE ../../nvhdutils/display/sevenseg_digit.vhd
+set_global_assignment -name VHDL_FILE ../../nvhdutils/display/multidigit_7seg.vhd
+set_global_assignment -name ENABLE_OCT_DONE OFF
+set_global_assignment -name CRC_ERROR_OPEN_DRAIN OFF
+set_global_assignment -name RESERVE_DATA1_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name RESERVE_FLASH_NCE_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name RESERVE_DCLK_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
