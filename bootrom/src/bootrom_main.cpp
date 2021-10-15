@@ -1,7 +1,7 @@
 
 #include "stdint.h"
 #include "VRV100.h"
-#include "cppinit.h"
+#include "bootrom_info.h"
 
 vexriscv_spim_t * spiregs;
 
@@ -9,7 +9,7 @@ void spiflash_init()
 {
   spiregs = (vexriscv_spim_t *)SPIM1_BASE;
 
-  unsigned speed = 10000000;
+  unsigned speed = 8000000;
   unsigned basespeed = MCU_FIXED_SPEED / 2;
   uint32_t clkdiv = basespeed / speed;
   if (clkdiv * speed < basespeed)  ++clkdiv;
@@ -58,7 +58,7 @@ void spiflash_load(unsigned aflashaddr, void * adst, unsigned alen)
   spiregs->DATA = 0x00000000 | ((aflashaddr >>  8) & 0xFF);
   spiregs->DATA = 0x00000000 | ((aflashaddr >>  0) & 0xFF);
 
-  while (tx_remaining && rx_remaining)
+  while (tx_remaining || rx_remaining)
   {
     // TX
 
@@ -98,7 +98,6 @@ void spiflash_load(unsigned aflashaddr, void * adst, unsigned alen)
       }
     }
   }
-
 }
 
 inline void start_app(unsigned appentry)
@@ -106,19 +105,12 @@ inline void start_app(unsigned appentry)
   __asm("jr %0" : : "r" (appentry));
 }
 
-// the C libraries require "_start" so we keep it as the entry point
-extern "C" __attribute__((noreturn)) void _start(unsigned self_flashing)  // self_flashing = 1: self-flashing required
+extern "C" __attribute__((noreturn)) void _start()
 {
-	// run the C/C++ initialization:
-	cppinit();
-
-	// provide info to the system about the clock speed:
+  bootblock_header_t  apphead; // this one allocated on the stack!
 
 	spiflash_init();
 
-	bootblock_header_t  apphead;
-
-	// BOOTBLOCK_STADDR provided as build option
 	spiflash_load(BOOTBLOCK_STADDR, &apphead, sizeof(apphead));
 
 	if ((apphead.signature == BOOTBLOCK_SIGNATURE) && ((apphead.compid >> 16) == (VRV100_COMPID >> 16)))
