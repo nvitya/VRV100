@@ -3,7 +3,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity VRV104_vhdl is
+entity VRV1_103_vhdl is
 port
 (
 	GPIOA_IO  		: inout  std_logic_vector(31 downto 0);
@@ -35,12 +35,12 @@ port
 );
 end entity;
 
-architecture behavioral of VRV153_vhdl
+architecture behavioral of VRV1_103_vhdl
 is
 	signal GPIOA_WRITE   : std_logic_vector(31 downto 0);
 	signal GPIOA_WRITEEN : std_logic_vector(31 downto 0);
 
-	component VRV104 is
+	component VRV1_103 is
 	port
 	(
 		io_gpioA_read  			: in  std_logic_vector(31 downto 0);
@@ -73,8 +73,7 @@ is
 		io_timerExternal_tick	: in  std_logic;
 		io_coreInterrupt			: in  std_logic;
 
-		io_axiClk               : in  std_logic;
-		io_vgaClk               : in  std_logic;
+		io_mainClk              : in  std_logic;
 		io_asyncReset           : in  std_logic
 	);
 	end component;
@@ -87,7 +86,7 @@ begin
 	end generate;
 
 
-	u0 : component VRV104
+	u0 : component VRV1_103
 	port map
 	(
 		io_gpioA_read  			=> GPIOA_IO,
@@ -120,7 +119,7 @@ begin
 		io_timerExternal_tick	=> '0',
 		io_coreInterrupt			=> '0',
 
-		io_axiClk               => CLK_100,
+		io_mainClk              => CLK_100,
 		io_asyncReset           => RESET
 	);
 
