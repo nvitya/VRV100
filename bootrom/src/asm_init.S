@@ -1,23 +1,20 @@
 
-.section .resetentry  // goes to the very beginning
+.section .asm_init  // goes to the very beginning
 
 .option  norelax   // important, because the GP register is not set yet
 
 .balign 4
 
 //-------------------------------------------------
-// Reset entry point
+// the bootrom info block jumped over to start here
 //-------------------------------------------------
-.global _reset_entry
-_reset_entry:
+.global bootrom_asm_init
+bootrom_asm_init:
 
 .cfi_startproc
 .cfi_undefined ra
 
-  nop
   la    sp, __stack  // stack pointer
-
-  //fence.i  // clear the instruction cache
 
 //-------------------------------------------------
 // Setup CPU core CSRs (some of them DO NOT have a dedicated

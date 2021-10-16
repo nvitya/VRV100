@@ -125,7 +125,10 @@ extern "C" __attribute__((noreturn)) void _start()
 
 	spiflash_load(BOOTBLOCK_STADDR, &apphead, sizeof(apphead));
 
-	if ((apphead.signature == BOOTBLOCK_SIGNATURE) && ((apphead.compid >> 16) == (VRV100_COMPID >> 16)))
+	if ( (apphead.signature == BOOTBLOCK_SIGNATURE)
+	     && ((apphead.compid >> 16) == (VRV100_COMPID >> 16))
+	     && ((apphead.addr_load >= 0x80000400) || (apphead.addr_load < 0x80000000))
+	   )
 	{
 	  // load the body to the destination
 	  spiflash_load(BOOTBLOCK_STADDR, (void *)apphead.addr_load, apphead.length + sizeof(apphead));

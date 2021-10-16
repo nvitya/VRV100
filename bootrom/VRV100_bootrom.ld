@@ -3,8 +3,7 @@
 MEMORY
 {
   BLTEXT (xrw) : ORIGIN = 0x80000000, LENGTH = 768
-  BLRAM (xrw)  : ORIGIN = 0x80000300, LENGTH = 192
-  BLINFO (xrw) : ORIGIN = 0x800003C0, LENGTH = 64 
+  BLRAM (xrw)  : ORIGIN = 0x80000300, LENGTH = 256
 }
 
 REGION_ALIAS("TEXT", BLTEXT);
@@ -23,7 +22,15 @@ SECTIONS
 	{
 		. = ALIGN(4);
 		
-    KEEP(*(.resetentry))
+    KEEP(*(.jumpcode))      /* to jump over the bootrom_info block */
+    
+    . = ALIGN(16);
+    
+    KEEP(*(.bootrom_info))  /* some info for the applications about memory/storage layout */
+		
+    . = ALIGN(16);
+    
+    KEEP(*(.asm_init))      /* a simplified init in asm */
     
 		*(.text .text.* )
 
@@ -32,7 +39,6 @@ SECTIONS
 		*(.ARM.extab* .gnu.linkonce.armextab.*)
 		*(vtable)
 
-    KEEP(*(.eh_frame*))
 		*(.gnu.linkonce.t.*)
 
 		*(.glue_7) *(.glue_7t)
@@ -45,11 +51,11 @@ SECTIONS
 		KEEP (*crtend.o(.ctors))
 
 	} > TEXT
-
+	
 	. = ALIGN(4);
 	_etext = .;
 	__etext = .;
-
+	
 	.data : ALIGN(4)
 	{
 	 *(.data_begin .data_begin.*)
@@ -77,10 +83,6 @@ SECTIONS
 	 _end_noinit = .;
 	} > RAM
 	
-  .bootrom_info : ALIGN(4) 
-  {
-    KEEP(*(.bootrom_info))
-  } > BLINFO	
 
 	PROVIDE ( end = _end_noinit ); /* was _ebss */
 	PROVIDE ( _end = _end_noinit );

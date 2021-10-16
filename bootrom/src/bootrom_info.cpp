@@ -12,6 +12,7 @@ extern const bootrom_info_t bootrom_info;  // required so that the optimizer kee
 __attribute__((section(".bootrom_info"),used))
 const bootrom_info_t bootrom_info =
 {
+  .signature = BOOTROM_INFO_SIGNATURE,
   .compid = VRV100_COMPID,
   .clock_speed_mhz = MCU_FIXED_SPEED,
   .bootblock_staddr = BOOTBLOCK_STADDR,
