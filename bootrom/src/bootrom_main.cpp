@@ -9,7 +9,7 @@ void spiflash_init()
 {
   spiregs = (vexriscv_spim_t *)SPIM1_BASE;
 
-  unsigned speed = 8000000;
+  unsigned speed = 10000000;
   unsigned basespeed = MCU_FIXED_SPEED / 2;
   uint32_t clkdiv = basespeed / speed;
   if (clkdiv * speed < basespeed)  ++clkdiv;
@@ -24,9 +24,21 @@ void spiflash_init()
   );
   spiregs->CONFIG = cfg;
 
-  spiregs->SSSETUP    =  1;  // time between chip select enable and the next byte
-  spiregs->SSHOLD     =  1;  // time between the last byte transmission and the chip select disable
-  spiregs->SSDISABLE  =  1;  // time between chip select disable and chip select enable
+  spiregs->SSSETUP    =  4;  // time between chip select enable and the next byte
+  spiregs->SSHOLD     =  4;  // time between the last byte transmission and the chip select disable
+  spiregs->SSDISABLE  =  4;  // time between chip select disable and chip select enable
+
+  // empty tx fifo
+  while ((spiregs->STATUS >> 16) != SPIM_TXFIFO_DEPTH)
+  {
+    // wait until the fifo will be empty
+  }
+
+  // empty rx fifo
+  while (spiregs->DATA & SPIM_DATA_VALID)
+  {
+    // do nothing
+  }
 }
 
 void spiflash_load(unsigned aflashaddr, void * adst, unsigned alen)
