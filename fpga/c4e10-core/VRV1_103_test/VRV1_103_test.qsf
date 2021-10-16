@@ -1,0 +1,134 @@
+# -------------------------------------------------------------------------- #
+#
+# Copyright (C) 2018  Intel Corporation. All rights reserved.
+# Your use of Intel Corporation's design tools, logic functions
+# and other software and tools, and its AMPP partner logic
+# functions, and any output files from any of the foregoing
+# (including device programming or simulation files), and any
+# associated documentation or information are expressly subject
+# to the terms and conditions of the Intel Program License
+# Subscription Agreement, the Intel Quartus Prime License Agreement,
+# the Intel FPGA IP License Agreement, or other applicable license
+# agreement, including, without limitation, that your use is for
+# the sole purpose of programming logic devices manufactured by
+# Intel and sold by Intel or its authorized distributors.  Please
+# refer to the applicable agreement for further details.
+#
+# -------------------------------------------------------------------------- #
+#
+# Quartus Prime
+# Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
+# Date created = 18:53:59  August 12, 2021
+#
+# -------------------------------------------------------------------------- #
+#
+# Notes:
+#
+# 1) The default values for assignments are stored in the file:
+#		ce15_vexrv_assignment_defaults.qdf
+#    If this file doesn't exist, see file:
+#		assignment_defaults.qdf
+#
+# 2) Altera recommends that you do not modify this file. This
+#    file is updated automatically by the Quartus Prime software
+#    and any changes you make may be lost or overwritten.
+#
+# -------------------------------------------------------------------------- #
+
+
+set_global_assignment -name FAMILY "Cyclone IV E"
+set_global_assignment -name DEVICE EP4CE10E22C8
+set_global_assignment -name ORIGINAL_QUARTUS_VERSION 18.1.0
+set_global_assignment -name PROJECT_CREATION_TIME_DATE "18:53:59  AUGUST 12, 2021"
+set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Lite Edition"
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
+set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 1
+
+set_global_assignment -name OPTIMIZATION_TECHNIQUE SPEED
+set_global_assignment -name SYNTH_TIMING_DRIVEN_SYNTHESIS ON
+set_global_assignment -name OPTIMIZE_HOLD_TIMING "ALL PATHS"
+set_global_assignment -name OPTIMIZE_MULTI_CORNER_TIMING ON
+set_global_assignment -name FITTER_EFFORT "STANDARD FIT"
+
+set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -rise
+set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -fall
+set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -rise
+set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -fall
+
+set_global_assignment -name USE_CONFIGURATION_DEVICE OFF
+set_global_assignment -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name RESERVE_DATA0_AFTER_CONFIGURATION "USE AS REGULAR IO"
+
+set_global_assignment -name FMAX_REQUIREMENT "100 MHz" -section_id CLK_100
+set_global_assignment -name FMAX_REQUIREMENT "100 MHz" -section_id CLK_100_SDRAM
+
+set_global_assignment -name ALLOW_ANY_RAM_SIZE_FOR_RECOGNITION ON
+
+set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "3.3-V LVTTL"
+
+set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
+set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+
+######################################################
+# C4E6/E10-Core Integrated Components
+######################################################
+
+set_location_assignment PIN_23 -to CLKIN_50
+set_location_assignment PIN_87 -to RESET_N
+
+# KEY
+#set_location_assignment PIN_J15 -to KEY[0]
+set_location_assignment PIN_86 -to KEY1
+
+# LEDS
+set_location_assignment PIN_85 -to LED[0]
+set_location_assignment PIN_84 -to LED[1]
+set_location_assignment PIN_83 -to LED[2]
+set_location_assignment PIN_77 -to LED[3]
+set_location_assignment PIN_76 -to LED[4]
+set_location_assignment PIN_75 -to LED[5]
+set_location_assignment PIN_74 -to LED[6]
+set_location_assignment PIN_73 -to LED[7]
+
+# SPI FLASH
+set_location_assignment PIN_8  -to SPIM1_SS
+set_location_assignment PIN_12 -to SPIM1_SCLK
+set_location_assignment PIN_6  -to SPIM1_MOSI
+set_location_assignment PIN_13 -to SPIM1_MISO
+
+######################################################
+# External components on the exptension headers
+######################################################
+
+# External 3.3V UART TX
+set_location_assignment PIN_126 -to UART0_TXD_O
+# External 3.3V UART RX
+set_location_assignment PIN_128 -to UART0_RXD_I
+
+# RISCV debug interface:
+set_location_assignment PIN_141 -to JTAG_TDI
+set_location_assignment PIN_137 -to JTAG_TMS
+set_location_assignment PIN_135 -to JTAG_TCK
+set_location_assignment PIN_132 -to JTAG_TDO
+
+######################################################
+
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name ENABLE_SIGNALTAP OFF
+
+set_global_assignment -name TOP_LEVEL_ENTITY VRV1_103_test_top
+set_global_assignment -name VHDL_FILE apb_periph.vhd
+set_global_assignment -name VERILOG_FILE VRV100/VRV1_103.v
+set_global_assignment -name VHDL_FILE VRV100/VRV1_103_vhdl.vhd
+set_global_assignment -name QIP_FILE clock_pll.qip
+set_global_assignment -name VHDL_FILE VRV1_103_test_top.vhd
+set_global_assignment -name ENABLE_OCT_DONE OFF
+set_global_assignment -name CRC_ERROR_OPEN_DRAIN OFF
+set_global_assignment -name RESERVE_DATA1_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name RESERVE_FLASH_NCE_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name RESERVE_DCLK_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
