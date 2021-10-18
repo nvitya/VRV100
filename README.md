@@ -21,7 +21,6 @@ VexRiscV CPU Core (I32M):
 
  Address   | peripheral
 -----------|--------------------
- 0x10000000| OCRAM, 16 kByte
  0x40000000| SDRAM, integrated (32 MByte) or external (optional)
  0x80000000| BOOTROM(RAM), 1 kByte, do not write this area
  0x80000400| OCRAM 3 - 65 kByte (Variants xx1 - xx5)
@@ -48,12 +47,12 @@ VexRiscV CPU Core (I32M):
 
 ## Variants
 
-Type | OCRAM|Cache| BUS    | SDRAM| Periph. |
------|------|-----|--------|------|---------|
-103  | 15 k | -   | simple | -    |       1 |
-104  | 31 k | -   | simple | -    |       1 |
-241  |  3 k | 4+4 | AXI4   | int. |       1 |
-365  | 65 k | 8+8 | AXI4   | ext. |       2 |
-441  |  3 k | 4+4 | AXI4   | int. |       2 |
-443  | 15 k | 4+4 | AXI4   | int. |       2 |
-543  | 15 k | 4+4 | AXI4   | int. | 2 + VGA |
+ ID  | OCRAM|Cache| BUS    | SDRAM| Periph.             |
+-----|------|-----|--------|------|---------------------|
+103  | 15 k | -   | simple | -    | 1xSerials |
+104  | 31 k | -   | simple | -    | 1xSerials |
+241  |  3 k | 4+4 | AXI4   | int. | 1xSerials |
+365  | 65 k | 8+8 | AXI4   | ext. | 2xSerials |
+441  |  3 k | 4+4 | AXI4   | int. | 2xSerials |
+443  | 15 k | 4+4 | AXI4   | int. | 2xSerials |
+543  | 15 k | 4+4 | AXI4   | int. | 2xSerials + VGA |
