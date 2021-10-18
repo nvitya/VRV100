@@ -22,9 +22,9 @@ VexRiscV CPU Core (I32M):
  Address   | peripheral
 -----------|--------------------
  0x10000000| OCRAM, 16 kByte
- 0x40000000| SDRAM, 32 MByte (optional)
+ 0x40000000| SDRAM, integrated (32 MByte) or external (optional)
  0x80000000| BOOTROM(RAM), 1 kByte, do not write this area
- 0x80000400| OCRAM 3 ... 65 kByte (xx1 ... xx5)
+ 0x80000400| OCRAM 3 - 65 kByte (Variants xx1 - xx5)
  0xF0000000| GPIOA (32 bit, bidirectional, independent bit control)
  0xF0001000| GPIOB (32 bit, bidirectional, independent bit control) (optional)
  0xF0010000| UART1, usually used as debug console
@@ -48,12 +48,12 @@ VexRiscV CPU Core (I32M):
 
 ## Variants
 
-Type | OCRAM|Cache| BUS    | SDRAM | VGA | GPIOB | SPIM2 | UART2 |
------|------|-----|--------|-------|-----|-------|-------|-------|
-104  | 32 k | -   | simple | -     | no  | no    | no    | no    |
-114  | 32 k | 4+4 | AXI4   | -     | no  | no    | no    | no    |
-123  | 16 k | 4+4 | AXI4   | yes   | no  | no    | no    | no    |
-134  | 32 k | 4+4 | AXI4   | no    | no  | yes   | yes   | yes   |
-441  |  3 k | 4+4 | AXI4   | yes   | no  | yes   | yes   | yes   |
-443  | 15 k | 4+4 | AXI4   | yes   | no  | yes   | yes   | yes   |
-543  | 15 k | 4+4 | AXI4   | yes   | yes | yes   | yes   | yes   |
+Type | OCRAM|Cache| BUS    | SDRAM| Periph. |
+-----|------|-----|--------|------|---------|
+103  | 15 k | -   | simple | -    |       1 |
+104  | 31 k | -   | simple | -    |       1 |
+241  |  3 k | 4+4 | AXI4   | int. |       1 |
+365  | 65 k | 8+8 | AXI4   | ext. |       2 |
+441  |  3 k | 4+4 | AXI4   | int. |       2 |
+443  | 15 k | 4+4 | AXI4   | int. |       2 |
+543  | 15 k | 4+4 | AXI4   | int. | 2 + VGA |
