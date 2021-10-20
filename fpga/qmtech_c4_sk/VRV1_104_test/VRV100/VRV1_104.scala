@@ -10,9 +10,8 @@ VexRiscV CPU Core (I32M):
  (no Data Cache)
  - JTAG Debugging Interface (special openocd required)
 Integrater Peripherals:
- 0x10000000: OCRAM, 32 kByte
  (no SDRAM)
- 0x80000000: BOOTROM(RAM), 4 kByte
+ 0x80000000: OC-RAM, 32 kByte, 1k reserved for the boot loader
  0xF0000000: GPIOA (32 bit, bidirectional, independent bit control)
  (no GPIOB)
  0xF0010000: UART1, used as debug console
@@ -278,21 +277,13 @@ class VRV1_104(config: VRV1_104Config) extends Component
     //****** MainBus slaves ********
     val mainBusMapping = ArrayBuffer[(PipelinedMemoryBus,SizeMapping)]()
 
-    val bootrom = new MuraxPipelinedMemoryBusRam(
-      onChipRamSize = 4 kB,
-      onChipRamHexFile = "VRV1_104_1M.hex",
-      pipelinedMemoryBusConfig = pipelinedMemoryBusConfig,
-      bigEndian = bigEndianDBus
-    )
-    mainBusMapping += bootrom.io.bus -> (0x80000000l, 4 kB)
-
-    val ram = new MuraxPipelinedMemoryBusRam(
+    val ocram = new MuraxPipelinedMemoryBusRam(
       onChipRamSize = onChipRamSize,
       onChipRamHexFile = null,
       pipelinedMemoryBusConfig = pipelinedMemoryBusConfig,
       bigEndian = bigEndianDBus
     )
-    mainBusMapping += ram.io.bus -> (0x10000000l, onChipRamSize)
+    mainBusMapping += ocram.io.bus -> (0x80000000l, onChipRamSize)
 
     val apbBridge = new PipelinedMemoryBusToApbBridge(
       apb3Config = Apb3Config(
@@ -364,7 +355,24 @@ object VRV1_104
     config.generateVerilog(
 	 {
       val toplevel = new VRV1_104(VRV1_104Config.default)
-      HexTools.initRam(toplevel.axi.bootrom.ram, "VRV1_104_1M.hex", 0x80000000l)
+      HexTools.initRam(toplevel.system.ocram.ram, "VRV1_104_1M.hex", 0x80000000l)
+      //HexTools.initRam(toplevel.system.ocram.ram, "VRV1_104_4M.hex", 0x80000000l)
+      toplevel
+    })
+  }
+}
+
+object VRV1_104_4M
+{
+  def main(args: Array[String])
+  {
+    val config = SpinalConfig()
+    config.generateVerilog(
+	 {
+      val toplevel = new VRV1_104(VRV1_104Config.default)
+		toplevel.setDefinitionName("VRV1_104_4M")
+      //HexTools.initRam(toplevel.system.ocram.ram, "VRV1_104_1M.hex", 0x80000000l)
+      HexTools.initRam(toplevel.system.ocram.ram, "VRV1_104_4M.hex", 0x80000000l)
       toplevel
     })
   }

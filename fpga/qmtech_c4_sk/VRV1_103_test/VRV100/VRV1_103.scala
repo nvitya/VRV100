@@ -64,7 +64,7 @@ object VRV1_103Config
   {
     val config = VRV1_103Config(
       coreFrequency = 100 MHz,
-      onChipRamSize  = 32 kB,
+      onChipRamSize  = 16 kB,
 	   hardwareBreakpointCount = 0,
 		pipelineDBus          = true,
 		pipelineMainBus       = false,

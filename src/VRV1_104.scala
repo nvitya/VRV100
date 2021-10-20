@@ -279,7 +279,7 @@ class VRV1_104(config: VRV1_104Config) extends Component
 
     val ocram = new MuraxPipelinedMemoryBusRam(
       onChipRamSize = onChipRamSize,
-      onChipRamHexFile = "VRV1_104_1M.hex",
+      onChipRamHexFile = null,
       pipelinedMemoryBusConfig = pipelinedMemoryBusConfig,
       bigEndian = bigEndianDBus
     )
@@ -355,7 +355,24 @@ object VRV1_104
     config.generateVerilog(
 	 {
       val toplevel = new VRV1_104(VRV1_104Config.default)
+      HexTools.initRam(toplevel.system.ocram.ram, "VRV1_104_1M.hex", 0x80000000l)
+      //HexTools.initRam(toplevel.system.ocram.ram, "VRV1_104_4M.hex", 0x80000000l)
+      toplevel
+    })
+  }
+}
+
+object VRV1_104_4M
+{
+  def main(args: Array[String])
+  {
+    val config = SpinalConfig()
+    config.generateVerilog(
+	 {
+      val toplevel = new VRV1_104(VRV1_104Config.default)
+		toplevel.setDefinitionName("VRV1_104_4M")
       //HexTools.initRam(toplevel.system.ocram.ram, "VRV1_104_1M.hex", 0x80000000l)
+      HexTools.initRam(toplevel.system.ocram.ram, "VRV1_104_4M.hex", 0x80000000l)
       toplevel
     })
   }

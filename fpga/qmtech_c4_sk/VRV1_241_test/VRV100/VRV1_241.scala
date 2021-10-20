@@ -295,7 +295,7 @@ class VRV1_241(config: VRV1_241Config) extends Component
 
     val gpioACtrl = Apb3GpioSetClear(
       gpioWidth = 32,
-      withReadSync = true
+      withReadSync = false
     )
 
     val timerCtrl = PinsecTimerCtrl()
