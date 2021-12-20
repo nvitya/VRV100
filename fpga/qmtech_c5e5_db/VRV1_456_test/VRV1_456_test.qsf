@@ -1,0 +1,188 @@
+
+
+set_global_assignment -name FAMILY "Cyclone V"
+set_global_assignment -name DEVICE 5CEFA5F23I7
+set_global_assignment -name ORIGINAL_QUARTUS_VERSION 18.1.0
+set_global_assignment -name PROJECT_CREATION_TIME_DATE "18:53:59  AUGUST 12, 2021"
+set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Lite Edition"
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
+set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 1
+set_global_assignment -name NOMINAL_CORE_SUPPLY_VOLTAGE 1.2V
+
+set_global_assignment -name OPTIMIZATION_TECHNIQUE SPEED
+set_global_assignment -name SYNTH_TIMING_DRIVEN_SYNTHESIS ON
+set_global_assignment -name OPTIMIZE_HOLD_TIMING "ALL PATHS"
+set_global_assignment -name OPTIMIZE_MULTI_CORNER_TIMING ON
+set_global_assignment -name FITTER_EFFORT "STANDARD FIT"
+
+set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -rise
+set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -fall
+set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -rise
+set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -fall
+
+set_global_assignment -name USE_CONFIGURATION_DEVICE OFF
+set_global_assignment -name CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name RESERVE_DATA0_AFTER_CONFIGURATION "USE AS REGULAR IO"
+
+set_global_assignment -name FMAX_REQUIREMENT "100 MHz" -section_id CLK_100
+set_global_assignment -name FMAX_REQUIREMENT "100 MHz" -section_id CLK_100_SDRAM
+
+set_global_assignment -name ALLOW_ANY_RAM_SIZE_FOR_RECOGNITION ON
+
+set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "3.3-V LVTTL"
+
+set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
+set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+
+########################################################################
+# FPGA Board Pins
+########################################################################
+
+set_location_assignment PIN_M9 -to CLKIN_50
+
+set_location_assignment PIN_E16 -to KEY
+set_location_assignment PIN_J17 -to RESET_N
+
+set_location_assignment PIN_V19 -to FLED[0]
+set_location_assignment PIN_T20 -to FLED[1]
+
+# SPI FLASH
+set_location_assignment PIN_R4  -to SPIM1_SS
+set_location_assignment PIN_V3  -to SPIM1_SCLK
+set_location_assignment PIN_AB4 -to SPIM1_MOSI
+set_location_assignment PIN_AB3 -to SPIM1_MISO
+
+# SDRAM
+
+set_location_assignment PIN_P17 -to DRAM_CS
+set_location_assignment PIN_G18 -to DRAM_CLK
+set_location_assignment PIN_G17 -to DRAM_CKE
+set_location_assignment PIN_T19 -to DRAM_CAS
+set_location_assignment PIN_P16 -to DRAM_RAS
+set_location_assignment PIN_U20 -to DRAM_WE
+
+set_location_assignment PIN_P18 -to DRAM_BA[1]
+set_location_assignment PIN_P19 -to DRAM_BA[0]
+
+set_location_assignment PIN_H20 -to DRAM_ADDR[12]
+set_location_assignment PIN_H18 -to DRAM_ADDR[11]
+set_location_assignment PIN_N19 -to DRAM_ADDR[10]
+set_location_assignment PIN_J19 -to DRAM_ADDR[9]
+set_location_assignment PIN_J18 -to DRAM_ADDR[8]
+set_location_assignment PIN_K17 -to DRAM_ADDR[7]
+set_location_assignment PIN_K16 -to DRAM_ADDR[6]
+set_location_assignment PIN_L18 -to DRAM_ADDR[5]
+set_location_assignment PIN_L19 -to DRAM_ADDR[4]
+set_location_assignment PIN_L17 -to DRAM_ADDR[3]
+set_location_assignment PIN_M16 -to DRAM_ADDR[2]
+set_location_assignment PIN_M20 -to DRAM_ADDR[1]
+set_location_assignment PIN_M18 -to DRAM_ADDR[0]
+
+set_location_assignment PIN_AA22 -to DRAM_DQ[0]
+set_location_assignment PIN_AB22 -to DRAM_DQ[1]
+set_location_assignment PIN_Y22 -to DRAM_DQ[2]
+set_location_assignment PIN_Y21 -to DRAM_DQ[3]
+set_location_assignment PIN_W22 -to DRAM_DQ[4]
+set_location_assignment PIN_W21 -to DRAM_DQ[5]
+set_location_assignment PIN_V21 -to DRAM_DQ[6]
+set_location_assignment PIN_U22 -to DRAM_DQ[7]
+set_location_assignment PIN_M21 -to DRAM_DQ[8]
+set_location_assignment PIN_M22 -to DRAM_DQ[9]
+set_location_assignment PIN_T22 -to DRAM_DQ[10]
+set_location_assignment PIN_R21 -to DRAM_DQ[11]
+set_location_assignment PIN_R22 -to DRAM_DQ[12]
+set_location_assignment PIN_P22 -to DRAM_DQ[13]
+set_location_assignment PIN_N20 -to DRAM_DQ[14]
+set_location_assignment PIN_N21 -to DRAM_DQ[15]
+
+set_location_assignment PIN_K22 -to DRAM_DQ[16]
+set_location_assignment PIN_K21 -to DRAM_DQ[17]
+set_location_assignment PIN_J22 -to DRAM_DQ[18]
+set_location_assignment PIN_J21 -to DRAM_DQ[19]
+set_location_assignment PIN_H21 -to DRAM_DQ[20]
+set_location_assignment PIN_G22 -to DRAM_DQ[21]
+set_location_assignment PIN_G21 -to DRAM_DQ[22]
+set_location_assignment PIN_F22 -to DRAM_DQ[23]
+set_location_assignment PIN_E22 -to DRAM_DQ[24]
+set_location_assignment PIN_E20 -to DRAM_DQ[25]
+set_location_assignment PIN_D22 -to DRAM_DQ[26]
+set_location_assignment PIN_D21 -to DRAM_DQ[27]
+set_location_assignment PIN_C21 -to DRAM_DQ[28]
+set_location_assignment PIN_B22 -to DRAM_DQ[29]
+set_location_assignment PIN_A22 -to DRAM_DQ[30]
+set_location_assignment PIN_B21 -to DRAM_DQ[31]
+
+set_location_assignment PIN_U21 -to DRAM_DQM[0]
+set_location_assignment PIN_L22 -to DRAM_DQM[1]
+set_location_assignment PIN_K20 -to DRAM_DQM[2]
+set_location_assignment PIN_E21 -to DRAM_DQM[3]
+
+########################################################################
+# Daughter Board
+########################################################################
+
+# CP2102 TX:
+set_location_assignment PIN_AB17 -to UART0_RXD_I
+# CP2102 RX:
+set_location_assignment PIN_AB18 -to UART0_TXD_O
+
+# RISCV debug interface (J11 PMOD 1-4):
+set_location_assignment PIN_AB21	-to JTAG_TDI
+set_location_assignment PIN_Y19  -to JTAG_TMS
+set_location_assignment PIN_AA20 -to JTAG_TCK
+set_location_assignment PIN_W19  -to JTAG_TDO
+
+# 5x Leds and 5x Keys
+
+set_location_assignment PIN_V9   -to BLED[0]
+set_location_assignment PIN_V10  -to BLED[1]
+set_location_assignment PIN_AB10 -to BLED[2]
+set_location_assignment PIN_AB11 -to BLED[3]
+set_location_assignment PIN_AB13 -to BLED[4]
+
+set_location_assignment PIN_U12 -to BKEY[0]
+set_location_assignment PIN_U11 -to BKEY[1]
+set_location_assignment PIN_R9  -to BKEY[2]
+set_location_assignment PIN_T10 -to BKEY[3]
+set_location_assignment PIN_F19 -to BKEY[4]
+
+# 7-segment display
+
+set_location_assignment PIN_R10  -to D7S_SEGMENT[7]
+set_location_assignment PIN_AA15 -to D7S_SEGMENT[6]
+set_location_assignment PIN_R11  -to D7S_SEGMENT[5]
+set_location_assignment PIN_Y14  -to D7S_SEGMENT[4]
+set_location_assignment PIN_AA14 -to D7S_SEGMENT[3]
+set_location_assignment PIN_T12  -to D7S_SEGMENT[2]
+set_location_assignment PIN_AB15 -to D7S_SEGMENT[1]
+set_location_assignment PIN_AA13 -to D7S_SEGMENT[0]
+
+set_location_assignment PIN_Y15  -to D7S_SEL[2]
+set_location_assignment PIN_T13  -to D7S_SEL[1]
+set_location_assignment PIN_AB12 -to D7S_SEL[0]
+
+#############################################################################
+
+
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name ENABLE_SIGNALTAP OFF
+
+set_global_assignment -name TOP_LEVEL_ENTITY VRV1_456_test_top
+set_global_assignment -name VHDL_FILE apb_periph.vhd
+set_global_assignment -name VERILOG_FILE VRV100/VRV1_456.v
+set_global_assignment -name VHDL_FILE VRV100/VRV1_456_vhdl.vhd
+set_global_assignment -name QIP_FILE clock_pll.qip
+set_global_assignment -name VHDL_FILE VRV1_456_test_top.vhd
+set_global_assignment -name VHDL_FILE ../../nvhdutils/generic/generic_functions.vhd
+set_global_assignment -name VHDL_FILE ../../nvhdutils/display/sevenseg_digit.vhd
+set_global_assignment -name VHDL_FILE ../../nvhdutils/display/multidigit_7seg.vhd
+set_global_assignment -name ENABLE_OCT_DONE OFF
+set_global_assignment -name CRC_ERROR_OPEN_DRAIN OFF
+set_global_assignment -name RESERVE_DATA1_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name RESERVE_FLASH_NCE_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name RESERVE_DCLK_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
