@@ -49,75 +49,82 @@ set_location_assignment PIN_V19 -to FLED[0]
 set_location_assignment PIN_T20 -to FLED[1]
 
 # SPI FLASH
-set_location_assignment PIN_R4  -to SPIM1_SS
-set_location_assignment PIN_V3  -to SPIM1_SCLK
-set_location_assignment PIN_AB4 -to SPIM1_MOSI
-set_location_assignment PIN_AB3 -to SPIM1_MISO
+#set_location_assignment PIN_R4  -to SPIM1_SS
+#set_location_assignment PIN_V3  -to SPIM1_SCLK
+#set_location_assignment PIN_AB4 -to SPIM1_MOSI
+#set_location_assignment PIN_AB3 -to SPIM1_MISO
+
+# moved to neutral pins :
+set_location_assignment PIN_N6 -to SPIM1_SS
+set_location_assignment PIN_M7 -to SPIM1_SCLK
+set_location_assignment PIN_N8 -to SPIM1_MOSI
+set_location_assignment PIN_T8 -to SPIM1_MISO
+
 
 # SDRAM
 
-set_location_assignment PIN_P17 -to DRAM_CS
-set_location_assignment PIN_G18 -to DRAM_CLK
-set_location_assignment PIN_G17 -to DRAM_CKE
-set_location_assignment PIN_T19 -to DRAM_CAS
-set_location_assignment PIN_P16 -to DRAM_RAS
-set_location_assignment PIN_U20 -to DRAM_WE
+set_location_assignment PIN_P17 -to SDRAM_CS
+set_location_assignment PIN_G18 -to SDRAM_CLK
+set_location_assignment PIN_G17 -to SDRAM_CKE
+set_location_assignment PIN_T19 -to SDRAM_CAS
+set_location_assignment PIN_P16 -to SDRAM_RAS
+set_location_assignment PIN_U20 -to SDRAM_WE
 
-set_location_assignment PIN_P18 -to DRAM_BA[1]
-set_location_assignment PIN_P19 -to DRAM_BA[0]
+set_location_assignment PIN_P18 -to SDRAM_BA[1]
+set_location_assignment PIN_P19 -to SDRAM_BA[0]
 
-set_location_assignment PIN_H20 -to DRAM_ADDR[12]
-set_location_assignment PIN_H18 -to DRAM_ADDR[11]
-set_location_assignment PIN_N19 -to DRAM_ADDR[10]
-set_location_assignment PIN_J19 -to DRAM_ADDR[9]
-set_location_assignment PIN_J18 -to DRAM_ADDR[8]
-set_location_assignment PIN_K17 -to DRAM_ADDR[7]
-set_location_assignment PIN_K16 -to DRAM_ADDR[6]
-set_location_assignment PIN_L18 -to DRAM_ADDR[5]
-set_location_assignment PIN_L19 -to DRAM_ADDR[4]
-set_location_assignment PIN_L17 -to DRAM_ADDR[3]
-set_location_assignment PIN_M16 -to DRAM_ADDR[2]
-set_location_assignment PIN_M20 -to DRAM_ADDR[1]
-set_location_assignment PIN_M18 -to DRAM_ADDR[0]
+set_location_assignment PIN_H20 -to SDRAM_ADDR[12]
+set_location_assignment PIN_H18 -to SDRAM_ADDR[11]
+set_location_assignment PIN_N19 -to SDRAM_ADDR[10]
+set_location_assignment PIN_J19 -to SDRAM_ADDR[9]
+set_location_assignment PIN_J18 -to SDRAM_ADDR[8]
+set_location_assignment PIN_K17 -to SDRAM_ADDR[7]
+set_location_assignment PIN_K16 -to SDRAM_ADDR[6]
+set_location_assignment PIN_L18 -to SDRAM_ADDR[5]
+set_location_assignment PIN_L19 -to SDRAM_ADDR[4]
+set_location_assignment PIN_L17 -to SDRAM_ADDR[3]
+set_location_assignment PIN_M16 -to SDRAM_ADDR[2]
+set_location_assignment PIN_M20 -to SDRAM_ADDR[1]
+set_location_assignment PIN_M18 -to SDRAM_ADDR[0]
 
-set_location_assignment PIN_AA22 -to DRAM_DQ[0]
-set_location_assignment PIN_AB22 -to DRAM_DQ[1]
-set_location_assignment PIN_Y22 -to DRAM_DQ[2]
-set_location_assignment PIN_Y21 -to DRAM_DQ[3]
-set_location_assignment PIN_W22 -to DRAM_DQ[4]
-set_location_assignment PIN_W21 -to DRAM_DQ[5]
-set_location_assignment PIN_V21 -to DRAM_DQ[6]
-set_location_assignment PIN_U22 -to DRAM_DQ[7]
-set_location_assignment PIN_M21 -to DRAM_DQ[8]
-set_location_assignment PIN_M22 -to DRAM_DQ[9]
-set_location_assignment PIN_T22 -to DRAM_DQ[10]
-set_location_assignment PIN_R21 -to DRAM_DQ[11]
-set_location_assignment PIN_R22 -to DRAM_DQ[12]
-set_location_assignment PIN_P22 -to DRAM_DQ[13]
-set_location_assignment PIN_N20 -to DRAM_DQ[14]
-set_location_assignment PIN_N21 -to DRAM_DQ[15]
+set_location_assignment PIN_AA22 -to SDRAM_DQ[0]
+set_location_assignment PIN_AB22 -to SDRAM_DQ[1]
+set_location_assignment PIN_Y22 -to SDRAM_DQ[2]
+set_location_assignment PIN_Y21 -to SDRAM_DQ[3]
+set_location_assignment PIN_W22 -to SDRAM_DQ[4]
+set_location_assignment PIN_W21 -to SDRAM_DQ[5]
+set_location_assignment PIN_V21 -to SDRAM_DQ[6]
+set_location_assignment PIN_U22 -to SDRAM_DQ[7]
+set_location_assignment PIN_M21 -to SDRAM_DQ[8]
+set_location_assignment PIN_M22 -to SDRAM_DQ[9]
+set_location_assignment PIN_T22 -to SDRAM_DQ[10]
+set_location_assignment PIN_R21 -to SDRAM_DQ[11]
+set_location_assignment PIN_R22 -to SDRAM_DQ[12]
+set_location_assignment PIN_P22 -to SDRAM_DQ[13]
+set_location_assignment PIN_N20 -to SDRAM_DQ[14]
+set_location_assignment PIN_N21 -to SDRAM_DQ[15]
 
-set_location_assignment PIN_K22 -to DRAM_DQ[16]
-set_location_assignment PIN_K21 -to DRAM_DQ[17]
-set_location_assignment PIN_J22 -to DRAM_DQ[18]
-set_location_assignment PIN_J21 -to DRAM_DQ[19]
-set_location_assignment PIN_H21 -to DRAM_DQ[20]
-set_location_assignment PIN_G22 -to DRAM_DQ[21]
-set_location_assignment PIN_G21 -to DRAM_DQ[22]
-set_location_assignment PIN_F22 -to DRAM_DQ[23]
-set_location_assignment PIN_E22 -to DRAM_DQ[24]
-set_location_assignment PIN_E20 -to DRAM_DQ[25]
-set_location_assignment PIN_D22 -to DRAM_DQ[26]
-set_location_assignment PIN_D21 -to DRAM_DQ[27]
-set_location_assignment PIN_C21 -to DRAM_DQ[28]
-set_location_assignment PIN_B22 -to DRAM_DQ[29]
-set_location_assignment PIN_A22 -to DRAM_DQ[30]
-set_location_assignment PIN_B21 -to DRAM_DQ[31]
+set_location_assignment PIN_K22 -to SDRAM_DQ[16]
+set_location_assignment PIN_K21 -to SDRAM_DQ[17]
+set_location_assignment PIN_J22 -to SDRAM_DQ[18]
+set_location_assignment PIN_J21 -to SDRAM_DQ[19]
+set_location_assignment PIN_H21 -to SDRAM_DQ[20]
+set_location_assignment PIN_G22 -to SDRAM_DQ[21]
+set_location_assignment PIN_G21 -to SDRAM_DQ[22]
+set_location_assignment PIN_F22 -to SDRAM_DQ[23]
+set_location_assignment PIN_E22 -to SDRAM_DQ[24]
+set_location_assignment PIN_E20 -to SDRAM_DQ[25]
+set_location_assignment PIN_D22 -to SDRAM_DQ[26]
+set_location_assignment PIN_D21 -to SDRAM_DQ[27]
+set_location_assignment PIN_C21 -to SDRAM_DQ[28]
+set_location_assignment PIN_B22 -to SDRAM_DQ[29]
+set_location_assignment PIN_A22 -to SDRAM_DQ[30]
+set_location_assignment PIN_B21 -to SDRAM_DQ[31]
 
-set_location_assignment PIN_U21 -to DRAM_DQM[0]
-set_location_assignment PIN_L22 -to DRAM_DQM[1]
-set_location_assignment PIN_K20 -to DRAM_DQM[2]
-set_location_assignment PIN_E21 -to DRAM_DQM[3]
+set_location_assignment PIN_U21 -to SDRAM_DQM[0]
+set_location_assignment PIN_L22 -to SDRAM_DQM[1]
+set_location_assignment PIN_K20 -to SDRAM_DQM[2]
+set_location_assignment PIN_E21 -to SDRAM_DQM[3]
 
 ########################################################################
 # Daughter Board
@@ -129,38 +136,38 @@ set_location_assignment PIN_AB17 -to UART0_RXD_I
 set_location_assignment PIN_AB18 -to UART0_TXD_O
 
 # RISCV debug interface (J11 PMOD 1-4):
-set_location_assignment PIN_AB21	-to JTAG_TDI
-set_location_assignment PIN_Y19  -to JTAG_TMS
+set_location_assignment PIN_AB21 -to JTAG_TDI
+set_location_assignment PIN_Y19 -to JTAG_TMS
 set_location_assignment PIN_AA20 -to JTAG_TCK
-set_location_assignment PIN_W19  -to JTAG_TDO
+set_location_assignment PIN_W19 -to JTAG_TDO
 
 # 5x Leds and 5x Keys
 
-set_location_assignment PIN_V9   -to BLED[0]
-set_location_assignment PIN_V10  -to BLED[1]
+set_location_assignment PIN_V9 -to BLED[0]
+set_location_assignment PIN_V10 -to BLED[1]
 set_location_assignment PIN_AB10 -to BLED[2]
 set_location_assignment PIN_AB11 -to BLED[3]
 set_location_assignment PIN_AB13 -to BLED[4]
 
 set_location_assignment PIN_U12 -to BKEY[0]
 set_location_assignment PIN_U11 -to BKEY[1]
-set_location_assignment PIN_R9  -to BKEY[2]
+set_location_assignment PIN_R9 -to BKEY[2]
 set_location_assignment PIN_T10 -to BKEY[3]
 set_location_assignment PIN_F19 -to BKEY[4]
 
 # 7-segment display
 
-set_location_assignment PIN_R10  -to D7S_SEGMENT[7]
+set_location_assignment PIN_R10 -to D7S_SEGMENT[7]
 set_location_assignment PIN_AA15 -to D7S_SEGMENT[6]
-set_location_assignment PIN_R11  -to D7S_SEGMENT[5]
-set_location_assignment PIN_Y14  -to D7S_SEGMENT[4]
+set_location_assignment PIN_R11 -to D7S_SEGMENT[5]
+set_location_assignment PIN_Y14 -to D7S_SEGMENT[4]
 set_location_assignment PIN_AA14 -to D7S_SEGMENT[3]
-set_location_assignment PIN_T12  -to D7S_SEGMENT[2]
+set_location_assignment PIN_T12 -to D7S_SEGMENT[2]
 set_location_assignment PIN_AB15 -to D7S_SEGMENT[1]
 set_location_assignment PIN_AA13 -to D7S_SEGMENT[0]
 
-set_location_assignment PIN_Y15  -to D7S_SEL[2]
-set_location_assignment PIN_T13  -to D7S_SEL[1]
+set_location_assignment PIN_Y15 -to D7S_SEL[2]
+set_location_assignment PIN_T13 -to D7S_SEL[1]
 set_location_assignment PIN_AB12 -to D7S_SEL[0]
 
 #############################################################################

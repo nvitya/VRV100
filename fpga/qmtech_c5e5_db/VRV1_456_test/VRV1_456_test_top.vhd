@@ -6,7 +6,11 @@ use ieee.numeric_std.all;
 entity VRV1_456_test_top is
 port
 (
-	LED 	: out std_logic_vector(0 downto 0);
+	FLED 	: out std_logic_vector(1 downto 0);
+	BLED 	: out std_logic_vector(4 downto 0);
+
+	FKEY  : in std_logic;
+	BKEY 	: in std_logic_vector(4 downto 0);
 
 	D7S_SEGMENT : out unsigned(7 downto 0);
    D7S_SEL 		: out unsigned(2 downto 0);
@@ -74,7 +78,10 @@ begin
 
 	SDRAM_CLK <= CLK_100_SDRAM; -- must be provided separately, phase shift required !
 
-	LED(0) <= GPIOA_IO(0);
+	FLED(0) <= GPIOA_IO(0);
+	FLED(1) <= CLKCNT(27);
+	
+	BLED(4 downto 0) <= not GPIO_OUT(4 downto 0);
 
 	D7S_SEGMENT <= not D7S_SEGDATA_P;
 
