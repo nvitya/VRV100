@@ -3,6 +3,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+LIBRARY altera_mf;
+USE altera_mf.all;
+
 entity VRV1_456_test_top is
 port
 (
@@ -17,11 +20,6 @@ port
 
 	UART0_TXD_O : out std_logic;
 	UART0_RXD_I : in  std_logic := '0';
-
-	SPIM1_SS    : out std_logic;
-	SPIM1_SCLK  : out std_logic;
-	SPIM1_MOSI  : out std_logic;
-	SPIM1_MISO  : in  std_logic;
 
 	SDRAM_ADDR  : out   std_logic_vector(12 downto 0);
 	SDRAM_BA    : out   std_logic_vector(1 downto 0);
@@ -72,6 +70,36 @@ is
 	signal APB_PRDATA		: std_logic_vector(31 downto 0);
 	signal APB_PSLVERROR	: std_logic;
 
+	signal SPIM1_SS    : std_logic;
+	signal SPIM1_SCLK  : std_logic;
+	signal SPIM1_MOSI  : std_logic;
+	signal SPIM1_MISO  : std_logic;
+
+	component cyclonev_asmiblock
+	port
+	(
+		 dclk : in std_logic;
+		 sce	: in std_logic;
+		 oe 	: in std_logic;
+
+		 data0out : in std_logic;
+		 data1out : in std_logic;
+		 data2out : in std_logic;
+		 data3out : in std_logic;
+
+		 data0oe : in std_logic;
+		 data1oe : in std_logic;
+		 data2oe : in std_logic;
+		 data3oe : in std_logic;
+
+		 data0in : out std_logic;
+		 data1in : out std_logic;
+		 data2in : out std_logic;
+		 data3in : out std_logic
+	);
+	end component;
+
+
 begin
 	RESET <= not RESET_N;
 	CLK 	 <= CLK_100;
@@ -80,7 +108,7 @@ begin
 
 	FLED(0) <= GPIOA_IO(0);
 	FLED(1) <= CLKCNT(27);
-	
+
 	BLED(4 downto 0) <= not GPIO_OUT(4 downto 0);
 
 	D7S_SEGMENT <= not D7S_SEGDATA_P;
@@ -92,6 +120,32 @@ begin
 		C0			=> CLK_100,
 		C1			=> CLK_100_SDRAM
 	);
+
+	-- on this FPGA in order to access the configuration SPI Flash 
+	-- the active serial configuration must be set and this special "cyclonev_asmiblock" must be used
+	asmiblock :	cyclonev_asmiblock
+	port map
+	(
+		 dclk => SPIM1_SCLK,
+		 sce  => SPIM1_SS,
+		 oe => '0',  -- this is active low !
+
+		 data0out => SPIM1_MOSI,
+		 data1out => '0',
+		 data2out => '0',
+		 data3out => '0',
+
+		 data0oe => '1',
+		 data1oe => '0',
+		 data2oe => '0',
+		 data3oe => '0',
+
+		 data0in => open,
+		 data1in => SPIM1_MISO,
+		 data2in => open,
+		 data3in => open
+	);
+
 
 	u0 : entity work.VRV1_456_vhdl
 	port map
