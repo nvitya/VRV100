@@ -222,7 +222,7 @@ object VRV1_456Config
             mhartid        = null,
             misaExtensionsInit = 66,
             misaAccess     = CsrAccess.NONE,
-            mtvecAccess    = CsrAccess.NONE,
+            mtvecAccess    = CsrAccess.READ_WRITE,  // requires for trap relocation
             mtvecInit      = 0x80000020l,
             mepcAccess     = CsrAccess.READ_WRITE,
             mscratchGen    = false,
