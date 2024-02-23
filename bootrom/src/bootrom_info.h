@@ -53,6 +53,12 @@
   #define BOOTBLOCK_STADDR     0x100000
   #define OCRAM_SIZE              16384
   #define SDRAM_SIZE      (32*1024*1024)
+#elif defined(VRV1_456_5M)
+  #define VRV100_COMPID      0x14560001
+  #define PERIPH_MUL                  2
+  #define BOOTBLOCK_STADDR     0x500000
+  #define OCRAM_SIZE             131072
+  #define SDRAM_SIZE     (64*1024*1024)
 #elif defined(VRV1_543_1M)
   #define VRV100_COMPID      0x15430001
   #define PERIPH_MUL                  2
