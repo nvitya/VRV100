@@ -488,7 +488,7 @@ object VRV1_456
     config.generateVerilog(
 	 {
       val toplevel = new VRV1_456(VRV1_456Config.default)
-      HexTools.initRam(toplevel.axi.ocram.ram, "VRV1_456_4M.hex", 0x80000000l)
+      HexTools.initRam(toplevel.axi.ocram.ram, "VRV1_456_5M.hex", 0x80000000l)
       toplevel
     })
   }

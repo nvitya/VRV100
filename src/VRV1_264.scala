@@ -1,25 +1,22 @@
 /************************************
-VRV1_456 SoC:
+VRV1_264 SoC:
 -----------
 VexRiscV CPU Core (I32M):
  - I32 with the following extensions: Mul-Div (M)
  - Frequency fixed to 100 MHz
  - MCYCLE CSR
  - Single Cycle Shift
- - 8k Instruction Cache (below 0xF0000000)
- - 8k Data Cache (below 0xF0000000)
+ - 4k Instruction Cache (below 0xF0000000)
+ - 4k Data Cache (below 0xF0000000)
  - JTAG Debugging Interface (special openocd required)
 Integrater Peripherals:
- 0x40000000: 64 MByte 32-bit SDRAM (internal controller)
- 0x80000000: OC-RAM, 128 kByte, the first 1k reserved for the boot loader
+ 0x40000000: EXTERNAL AXI BUS (for SDRAM)
+ 0x80000000: OC-RAM, 64 kByte, the first 1k reserved for the boot loader
  0xF0000000: GPIOA (32 bit, bidirectional, independent bit control)
- 0xF0001000: GPIOB (32 bit, bidirectional, independent bit control)
  0xF0010000: UART1, used as debug console
- 0xF0011000: UART2
  0xF0020000: Timer
 (no VGA controller)
  0xF0040000: SPI Master 1 (CS0: SPI Flash)
- 0xF0041000: SPI Master 2
  0xF1000000: External APB3 Bus (Master) - for user extensions
 */
 
@@ -46,78 +43,22 @@ import spinal.lib.system.debugger.{JtagAxi4SharedDebugger, JtagBridge, SystemDeb
 import scala.collection.mutable.ArrayBuffer
 
 
-object W9825G6KH6_2X {
-  def layout = SdramLayout(
-    generation = SDR,
-    bankWidth = 2,
-    columnWidth = 9,
-    rowWidth = 13,
-    dataWidth = 32
-  )
-
-  def timingGrade7 = SdramTimings(
-    bootRefreshCount =   8,
-    tPOW             = 200 us,
-    tREF             =  64 ms,
-    tRC              =  60 ns,
-    tRFC             =  60 ns,
-    tRAS             =  42 ns,
-    tRP              =  18 ns,
-    tRCD             =  18 ns,
-    cMRD             =  2,
-    tWR              =  7.5 ns,
-    cWR              =  1
-  )
-
-  def timingGrade6 = SdramTimings(
-    bootRefreshCount =   8,
-    tPOW             = 200 us,
-    tREF             =  64 ms,
-    tRC              =  60 ns,
-    tRFC             =  60 ns,
-    tRAS             =  42 ns,
-    tRP              =  15 ns,
-    tRCD             =  15 ns,
-    cMRD             =  2,
-    tWR              =  6 ns,
-    cWR              =  1
-  )
-}
-
-
-case class VRV1_456Config(
+case class VRV1_264Config(
   axiFrequency : HertzNumber,
   onChipRamSize : BigInt,
-  sdramLayout: SdramLayout,
-  sdramTimings: SdramTimings,
   cpuPlugins : ArrayBuffer[Plugin[VexRiscv]],
   uart1CtrlConfig : UartCtrlMemoryMappedConfig,
-  uart2CtrlConfig : UartCtrlMemoryMappedConfig,
-  spim1CtrlConfig : SpiMasterCtrlMemoryMappedConfig,
-  spim2CtrlConfig : SpiMasterCtrlMemoryMappedConfig
+  spim1CtrlConfig : SpiMasterCtrlMemoryMappedConfig
 )
 
-object VRV1_456Config
+object VRV1_264Config
 {
   def default =
   {
-    val config = VRV1_456Config(
+    val config = VRV1_264Config(
       axiFrequency = 100 MHz,
-      onChipRamSize  = 128 kB,
-      sdramLayout = W9825G6KH6_2X.layout,
-      sdramTimings = W9825G6KH6_2X.timingGrade7,
+      onChipRamSize  = 32 kB,
       uart1CtrlConfig = UartCtrlMemoryMappedConfig(
-        uartCtrlConfig = UartCtrlGenerics(
-          dataWidthMax      = 8,
-          clockDividerWidth = 20,
-          preSamplingSize   = 1,
-          samplingSize      = 5,
-          postSamplingSize  = 2
-        ),
-        txFifoDepth = 1024,
-        rxFifoDepth = 1024
-      ),
-      uart2CtrlConfig = UartCtrlMemoryMappedConfig(
         uartCtrlConfig = UartCtrlGenerics(
           dataWidthMax      = 8,
           clockDividerWidth = 20,
@@ -137,15 +78,6 @@ object VRV1_456Config
         cmdFifoDepth = 512,
         rspFifoDepth = 512
       ),
-      spim2CtrlConfig = SpiMasterCtrlMemoryMappedConfig(
-        ctrlGenerics = SpiMasterCtrlGenerics(
-          ssWidth			    = 4,
-          timerWidth        = 16,
-          dataWidth         = 8
-        ),
-        cmdFifoDepth = 512,
-        rspFifoDepth = 512
-      ),
       cpuPlugins = ArrayBuffer(
         //new PcManagerSimplePlugin(0x80000000l, false),
 
@@ -154,7 +86,7 @@ object VRV1_456Config
           prediction = STATIC,
 			 //compressedGen = true,
           config = InstructionCacheConfig(
-            cacheSize = 2 * 4096,
+            cacheSize = 4096,
             bytePerLine =32,
             wayCount = 1,
             addressWidth = 32,
@@ -169,7 +101,7 @@ object VRV1_456Config
         ),
         new DBusCachedPlugin(
           config = new DataCacheConfig(
-            cacheSize         = 2 * 4096,
+            cacheSize         = 4096,
             bytePerLine       = 32,
             wayCount          = 1,
             addressWidth      = 32,
@@ -243,12 +175,12 @@ object VRV1_456Config
   }
 }
 
-class VRV1_456(config: VRV1_456Config) extends Component
+class VRV1_264(config: VRV1_264Config) extends Component
 {
   //Legacy constructor
   def this(axiFrequency: HertzNumber)
   {
-    this(VRV1_456Config.default.copy(axiFrequency = axiFrequency))
+    this(VRV1_264Config.default.copy(axiFrequency = axiFrequency))
   }
 
   import config._
@@ -263,15 +195,11 @@ class VRV1_456(config: VRV1_456Config) extends Component
 
     //Main components IO
     val jtag       = slave(Jtag())
-    val sdram      = master(SdramInterface(sdramLayout))
 
     //Peripherals IO
     val gpioA         = master(TriStateArray(32 bits))
-    val gpioB         = master(TriStateArray(32 bits))
     val uart1         = master(Uart())
-    val uart2         = master(Uart())
     val spim1         = master(SpiMaster(spim1CtrlConfig.ctrlGenerics.ssWidth))
-    val spim2         = master(SpiMaster(spim2CtrlConfig.ctrlGenerics.ssWidth))
 
     val timerExternal = in(PinsecTimerCtrlExternal())
     val coreInterrupt = in Bool()
@@ -280,6 +208,8 @@ class VRV1_456(config: VRV1_456Config) extends Component
       addressWidth = 20,
       dataWidth    = 32
 	  ))
+
+	 val axi2 = master(Axi4(Axi4Config(addressWidth = 28, dataWidth=32, idWidth = 4)))
   }
 
   val resetCtrlClockDomain = ClockDomain(
@@ -330,13 +260,7 @@ class VRV1_456(config: VRV1_456Config) extends Component
       idWidth = 4
     )
 
-    val sdramCtrl = Axi4SharedSdramCtrl(
-      axiDataWidth = 32,
-      axiIdWidth   = 4,
-      layout       = sdramLayout,
-      timing       = sdramTimings,
-      CAS          = 3
-    )
+    val axi2 = Axi4(Axi4Config(addressWidth = 28, dataWidth=32, idWidth = 4))
 
     val apbBridge = Axi4SharedToApb3Bridge(
       addressWidth = 20,
@@ -354,18 +278,12 @@ class VRV1_456(config: VRV1_456Config) extends Component
       gpioWidth = 32,
       withReadSync = false
     )
-    val gpioBCtrl = Apb3GpioSetClear(
-      gpioWidth = 32,
-      withReadSync = false
-    )
 
     val timerCtrl = PinsecTimerCtrl()
 
     val uart1Ctrl = Apb3UartCtrl(uart1CtrlConfig)
-    val uart2Ctrl = Apb3UartCtrl(uart2CtrlConfig)
 
     val spim1Ctrl = Apb3SpiMasterCtrl(spim1CtrlConfig)
-    val spim2Ctrl = Apb3SpiMasterCtrl(spim2CtrlConfig)
 
     val core = new Area
 	 {
@@ -401,14 +319,14 @@ class VRV1_456(config: VRV1_456Config) extends Component
 
     axiCrossbar.addSlaves(
       ocram.io.axi      -> (0x80000000L,   onChipRamSize),
-      sdramCtrl.io.axi  -> (0x40000000L,   sdramLayout.capacity),
+      axi2			  		-> (0x40000000L,   256 MB),
       apbBridge.io.axi  -> (0xF0000000L,   1 MB),
       apbBridge2.io.axi -> (0xF1000000L,   1 MB)
     )
 
     axiCrossbar.addConnections(
-      core.iBus       -> List( ocram.io.axi, sdramCtrl.io.axi),
-      core.dBus       -> List( ocram.io.axi, sdramCtrl.io.axi, apbBridge.io.axi, apbBridge2.io.axi )
+      core.iBus       -> List( ocram.io.axi, axi2),
+      core.dBus       -> List( ocram.io.axi, axi2, apbBridge.io.axi, apbBridge2.io.axi )
     )
 
 
@@ -424,13 +342,6 @@ class VRV1_456(config: VRV1_456Config) extends Component
       crossbar.writeData.halfPipe() >> bridge.writeData
       crossbar.writeRsp             << bridge.writeRsp
       crossbar.readRsp              << bridge.readRsp
-    })
-
-    axiCrossbar.addPipelining(sdramCtrl.io.axi)((crossbar,ctrl) => {
-      crossbar.sharedCmd.halfPipe()  >>  ctrl.sharedCmd
-      crossbar.writeData            >/-> ctrl.writeData
-      crossbar.writeRsp              <<  ctrl.writeRsp
-      crossbar.readRsp               <<  ctrl.readRsp
     })
 
     axiCrossbar.addPipelining(ocram.io.axi)((crossbar,ctrl) => {
@@ -456,39 +367,33 @@ class VRV1_456(config: VRV1_456Config) extends Component
       slaves = List
 	   (
         gpioACtrl.io.apb  -> (0x00000, 4 kB),
-        gpioBCtrl.io.apb  -> (0x01000, 4 kB),
         uart1Ctrl.io.apb  -> (0x10000, 4 kB),
-        uart2Ctrl.io.apb  -> (0x11000, 4 kB),
         timerCtrl.io.apb  -> (0x20000, 4 kB),
-        spim1Ctrl.io.apb  -> (0x40000, 4 kB),
-        spim2Ctrl.io.apb  -> (0x41000, 4 kB)
+        spim1Ctrl.io.apb  -> (0x40000, 4 kB)
       )
     )
   }
 
-  io.sdram          <> axi.sdramCtrl.io.sdram
+  io.axi2           <> axi.axi2
 
   io.gpioA          <> axi.gpioACtrl.io.gpio
-  io.gpioB          <> axi.gpioBCtrl.io.gpio
   io.timerExternal  <> axi.timerCtrl.io.external
   io.uart1          <> axi.uart1Ctrl.io.uart
-  io.uart2          <> axi.uart2Ctrl.io.uart
   io.spim1          <> axi.spim1Ctrl.io.spi
-  io.spim2          <> axi.spim2Ctrl.io.spi
 
   io.apb2           <> axi.apbBridge2.io.apb
 }
 
-// Cyclone IV Starter Kit
-object VRV1_456
+// Cyclone 10LP025 Development Kit
+object VRV1_264
 {
   def main(args: Array[String])
   {
     val config = SpinalConfig()
     config.generateVerilog(
 	 {
-      val toplevel = new VRV1_456(VRV1_456Config.default)
-      HexTools.initRam(toplevel.axi.ocram.ram, "VRV1_456_5M.hex", 0x80000000l)
+      val toplevel = new VRV1_264(VRV1_264Config.default)
+      HexTools.initRam(toplevel.axi.ocram.ram, "VRV1_264_1M.hex", 0x80000000l)
       toplevel
     })
   }

@@ -47,7 +47,7 @@ set_global_assignment -name MIN_CORE_JUNCTION_TEMP "-40"
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 100
 set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 1
 set_global_assignment -name NOMINAL_CORE_SUPPLY_VOLTAGE 1.2V
-set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (VHDL)"
+set_global_assignment -name EDA_SIMULATION_TOOL "Questa Intel FPGA (VHDL)"
 set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation
 set_global_assignment -name EDA_OUTPUT_DATA_FORMAT VHDL -section_id eda_simulation
 set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_board_design_timing
@@ -136,6 +136,7 @@ set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -fall
 set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -rise
 set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -fall
 set_global_assignment -name RESERVE_DATA0_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name VERILOG_FILE OpenHBMC/intel/primitives_intel.v
 set_global_assignment -name VHDL_FILE OpenHBMC/hyperram_vhdl.vhd
 set_global_assignment -name VERILOG_FILE OpenHBMC/hbmc_ufifo.v
 set_global_assignment -name VERILOG_FILE OpenHBMC/hbmc_iobuf.v
@@ -153,4 +154,7 @@ set_global_assignment -name VERILOG_FILE VRV100/VRV1_264.v
 set_global_assignment -name QIP_FILE clock_pll.qip
 set_global_assignment -name VHDL_FILE VRV1_264_test_top.vhd
 set_global_assignment -name VHDL_FILE apb_periph.vhd
+set_global_assignment -name QIP_FILE iobuf.qip
+set_global_assignment -name QIP_FILE fifo_18b_36b_512w.qip
+set_global_assignment -name QIP_FILE fifo_36b_18b_512w.qip
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

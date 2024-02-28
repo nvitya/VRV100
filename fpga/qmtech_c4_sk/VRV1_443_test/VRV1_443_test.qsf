@@ -40,7 +40,7 @@ set_global_assignment -name FAMILY "Cyclone IV E"
 set_global_assignment -name DEVICE EP4CE15F23C8
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 18.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "18:53:59  AUGUST 12, 2021"
-set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Lite Edition"
+set_global_assignment -name LAST_QUARTUS_VERSION "21.1.1 Lite Edition"
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
@@ -79,7 +79,6 @@ set_location_assignment PIN_E3 -to LED
 # CP2102 TX:
 set_location_assignment PIN_Y21 -to UART0_RXD_I
 # CP2102 RX:
-set_location_assignment PIN_Y22 -to UART0_TXD_O
 
 # SPI FLASH
 set_location_assignment PIN_E2 -to SPIM1_SS
@@ -163,6 +162,7 @@ set_location_assignment PIN_M1 -to JTAG_TDI
 set_location_assignment PIN_N1 -to JTAG_TMS
 set_location_assignment PIN_P1 -to JTAG_TCK
 set_location_assignment PIN_R1 -to JTAG_TDO
+set_location_assignment PIN_R2 -to UART0_TXD_O
 
 set_location_assignment PIN_W19 -to D7S_SEGMENT[7]
 set_location_assignment PIN_U19 -to D7S_SEGMENT[6]
@@ -182,6 +182,11 @@ set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name ENABLE_SIGNALTAP OFF
 
 set_global_assignment -name TOP_LEVEL_ENTITY VRV1_443_test_top
+set_global_assignment -name ENABLE_OCT_DONE OFF
+set_global_assignment -name CRC_ERROR_OPEN_DRAIN OFF
+set_global_assignment -name RESERVE_DATA1_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name RESERVE_FLASH_NCE_AFTER_CONFIGURATION "USE AS REGULAR IO"
+set_global_assignment -name RESERVE_DCLK_AFTER_CONFIGURATION "USE AS REGULAR IO"
 set_global_assignment -name VHDL_FILE apb_periph.vhd
 set_global_assignment -name VERILOG_FILE VRV100/VRV1_443.v
 set_global_assignment -name VHDL_FILE VRV100/VRV1_443_vhdl.vhd
@@ -190,9 +195,4 @@ set_global_assignment -name VHDL_FILE VRV1_443_test_top.vhd
 set_global_assignment -name VHDL_FILE ../../nvhdutils/generic/generic_functions.vhd
 set_global_assignment -name VHDL_FILE ../../nvhdutils/display/sevenseg_digit.vhd
 set_global_assignment -name VHDL_FILE ../../nvhdutils/display/multidigit_7seg.vhd
-set_global_assignment -name ENABLE_OCT_DONE OFF
-set_global_assignment -name CRC_ERROR_OPEN_DRAIN OFF
-set_global_assignment -name RESERVE_DATA1_AFTER_CONFIGURATION "USE AS REGULAR IO"
-set_global_assignment -name RESERVE_FLASH_NCE_AFTER_CONFIGURATION "USE AS REGULAR IO"
-set_global_assignment -name RESERVE_DCLK_AFTER_CONFIGURATION "USE AS REGULAR IO"
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

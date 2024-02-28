@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<efx:project name="efinix_t20-dev" description="" last_change_date="Mo. Dezember 11 2023 22:12:25" location="/workvc/VRV100/fpga/efinix_t20-dev" sw_version="2023.1.150.6.14" last_run_state="pass" last_run_tool="efx_pgm" last_run_flow="bitstream" config_result_in_sync="true" design_ood="sync" place_ood="sync" route_ood="sync" xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
+<efx:project name="efinix_t20-dev" description="" last_change_date="Mo. Jänner 1 2024 11:07:59" location="/workvc/VRV100/fpga/efinix_t20-dev" sw_version="2023.1.150.6.14" last_run_state="pass" last_run_tool="efx_pgm" last_run_flow="bitstream" config_result_in_sync="true" design_ood="sync" place_ood="sync" route_ood="sync" xmlns:efx="http://www.efinixinc.com/enf_proj" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.efinixinc.com/enf_proj enf_proj.xsd">
     <efx:device_info>
         <efx:family name="Trion"/>
         <efx:device name="T20F256"/>

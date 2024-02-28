@@ -92,7 +92,7 @@ is
 		C_S_AXI_BUSER_WIDTH  : integer := 0;
 
 		C_HBMC_CLOCK_HZ      : integer := 166000000;
-		C_HBMC_FPGA_DRIVE_STRENGTH : integer := 8;
+		C_HBMC_FPGA_DRIVE_STRENGTH : string := "8";
 
 		C_HBMC_FPGA_SLEW_RATE      : string := "SLOW";
 		C_HBMC_MEM_DRIVE_STRENGTH  : integer := 46;
